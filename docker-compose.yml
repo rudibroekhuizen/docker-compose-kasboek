@@ -1,0 +1,112 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik:1.6.6
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - web
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${TRAEFIK_TOML_FILE:-./traefik/ppdb.traefik.toml}:/traefik.toml
+#     - ${ACME_JSON:-./traefik/acme.json}:/acme.json
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=8080"
+      - ${TRAEFIK_URL_CONFIG:-traefik.frontend.rule=Host:traefik.docker.localhost}
+
+  postgres:
+    build: ./postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ./postgres/conf.d:/conf.d
+      - miniodata:/mnt/miniodata # minio data share
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - REPLICATION_USER=${REPLICATION_USER}
+      - REPLICATION_PASSWORD=${REPLICATION_PASSWORD}
+    networks:
+      - default
+      - pgnet
+
+  pgadmin:
+    image: dpage/pgadmin4:3.5
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    expose:
+      - "80"
+#   ports:
+#     - "5050:80"
+    networks:
+      - web
+      - pgnet
+    volumes:
+      - ./pgadmin:/root/.pgadmin
+    labels:
+      - "traefik.backend=naturalis-pgadmin"
+      - "traefik.docker.network=web"
+      - "traefik.enable=true"
+      - "traefik.port=80"
+      - ${GRAFANA_URL_CONFIG:-traefik.frontend.rule=Host:pgadmin.docker.localhost}
+
+  minio:
+    image: minio/minio:RELEASE.2018-09-12T18-49-56Z
+    restart: unless-stopped
+    command: "server /data"
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-12345}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-12345678}
+    expose:
+      - "9000"
+    volumes:
+      - miniodata:/data
+#     - "/data/minioconfig:/root/.minio"
+    networks:
+      - web
+      - default
+    labels:
+      - "traefik.backend=minio"
+      - "traefik.docker.network=web"
+      - "traefik.enable=true"
+      - "traefik.port=9000"
+      - ${MINIO_URL_CONFIG:-traefik.frontend.rule=Host:minio.docker.localhost}
+
+  grafana:
+    image: grafana/grafana:5.3.2
+    volumes:
+      - grafanadata:/var/lib/grafana
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASS:-secret}
+    ports: # remove when using traefik only
+      - "3000:3000"
+    expose:
+      - "3000"
+    networks:
+      - web
+      - default
+    labels:
+      - "traefik.backend=naturalis-grafana"
+      - "traefik.docker.network=web"
+      - "traefik.enable=true"
+      - "traefik.port=3000"
+      - ${GRAFANA_URL_CONFIG:-traefik.frontend.rule=Host:grafana.docker.localhost}
+
+networks:
+  pgnet:
+    external: true
+  web:
+    external: true
+
+volumes:
+  pglog:
+  pgdata:
+  miniodata:
+  grafanadata:
