@@ -50,6 +50,7 @@ services:
       - pgnet
     volumes:
       - ./pgadmin:/root/.pgadmin
+      - ${PGADMIN_SAVED_QUERIES}:/var/lib/pgadmin/storage
     labels:
       - "traefik.backend=naturalis-pgadmin"
       - "traefik.docker.network=web"
