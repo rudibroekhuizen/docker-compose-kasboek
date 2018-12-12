@@ -84,9 +84,11 @@ services:
     image: grafana/grafana:5.3.2
     volumes:
       - grafanadata:/var/lib/grafana
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+      - ./grafana/provisioning:/etc/grafana/provisioning
     environment:
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASS:-secret}
-    ports: # remove when using traefik only
+    ports:
       - "3000:3000"
     expose:
       - "3000"
