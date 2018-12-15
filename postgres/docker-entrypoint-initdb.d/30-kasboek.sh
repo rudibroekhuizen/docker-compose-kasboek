@@ -22,7 +22,7 @@ psql -v --dbname=kasboek ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
     account_iban character varying COLLATE pg_catalog."default",
     opposing_iban character varying COLLATE pg_catalog."default",
     type character varying COLLATE pg_catalog."default",
-    debit character varying COLLATE pg_catalog."default",
+    debit_credit character varying COLLATE pg_catalog."default",
     amount money,
     method character varying COLLATE pg_catalog."default",
     description character varying COLLATE pg_catalog."default"
