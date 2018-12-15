@@ -1,7 +1,5 @@
 SET LC_MONETARY="nl_NL.utf8";
 
-CREATE SCHEMA kasboek;
-
 CREATE DATABASE kasboek
     WITH 
     OWNER = postgres
@@ -10,3 +8,5 @@ CREATE DATABASE kasboek
     LC_CTYPE = 'nl_NL.utf8'
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1;
+
+CREATE SCHEMA kasboek;
