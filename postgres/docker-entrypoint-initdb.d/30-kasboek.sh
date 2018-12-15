@@ -11,7 +11,7 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
       LC_CTYPE = 'nl_NL.utf8'
       TABLESPACE = pg_default
       CONNECTION LIMIT = -1;
-  CREATE SCHEMA kasboek;
+  CREATE SCHEMA kasboek.kasboek;
   CREATE TABLE kasboek.transactions
   (
     date timestamp without time zone,
