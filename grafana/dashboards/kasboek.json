@@ -66,7 +66,7 @@
       "bars": true,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": "PostgreSQL",
       "fill": 1,
       "gridPos": {
         "h": 5,
@@ -167,7 +167,7 @@
     },
     {
       "columns": [],
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": "PostgreSQL",
       "fontSize": "100%",
       "gridPos": {
         "h": 3,
@@ -273,7 +273,7 @@
     },
     {
       "columns": [],
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": "PostgreSQL",
       "fontSize": "100%",
       "gridPos": {
         "h": 3,
@@ -379,7 +379,7 @@
     },
     {
       "columns": [],
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": "PostgreSQL",
       "fontSize": "100%",
       "gridPos": {
         "h": 7,
@@ -470,7 +470,7 @@
     },
     {
       "columns": [],
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": "PostgreSQL",
       "fontSize": "100%",
       "gridPos": {
         "h": 12,
@@ -564,7 +564,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": "PostgreSQL",
       "fill": 1,
       "gridPos": {
         "h": 5,
@@ -668,7 +668,7 @@
       "bars": true,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": "PostgreSQL",
       "fill": 1,
       "gridPos": {
         "h": 5,
@@ -775,7 +775,7 @@
         "label": "Others",
         "threshold": 0
       },
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": "PostgreSQL",
       "fontSize": "80%",
       "format": "short",
       "gridPos": {
@@ -825,7 +825,7 @@
     },
     {
       "columns": [],
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": "PostgreSQL",
       "fontSize": "100%",
       "gridPos": {
         "h": 9,
@@ -915,7 +915,7 @@
     },
     {
       "columns": [],
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": "PostgreSQL",
       "fontSize": "100%",
       "gridPos": {
         "h": 9,
@@ -1125,7 +1125,7 @@
     ]
   },
   "timezone": "",
-  "title": "Personal Finances",
+  "title": "Kasboek",
   "uid": "4tsS991mz",
   "version": 48
 }
