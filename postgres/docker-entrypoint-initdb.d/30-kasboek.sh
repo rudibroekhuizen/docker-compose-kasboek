@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
+psql -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
   SET LC_MONETARY="nl_NL.utf8";
   CREATE DATABASE kasboek
       WITH 
@@ -11,6 +11,9 @@ psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
       LC_CTYPE = 'nl_NL.utf8'
       TABLESPACE = pg_default
       CONNECTION LIMIT = -1;
+EOSQL
+
+psql -v --dbname=kasboek ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
   CREATE SCHEMA kasboek;
   CREATE TABLE kasboek.transactions
   (
