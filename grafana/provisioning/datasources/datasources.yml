@@ -5,10 +5,10 @@ datasources:
   - name: Postgres
     type: postgres
     url: postgres:5432
-    database: grafana
-    user: "${POSTGRES_USER}"
+    database: kasboek
+    user: ${POSTGRES_USER}
     secureJsonData:
-      password: "${POSTGRES_PASSWORD}"
+      password: ${POSTGRES_PASSWORD}
     jsonData:
       sslmode: "disable"      # disable/require/verify-ca/verify-full
       maxOpenConns: 0         # Grafana v5.4+
