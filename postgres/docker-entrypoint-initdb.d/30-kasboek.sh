@@ -13,7 +13,7 @@ psql -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
       CONNECTION LIMIT = -1;
 EOSQL
 
-psql -v --dbname=kasboek ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
+psql --dbname=kasboek -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
   CREATE SCHEMA kasboek;
   CREATE TABLE kasboek.transactions
   (
