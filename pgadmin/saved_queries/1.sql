@@ -10,3 +10,5 @@ CREATE DATABASE kasboek
     CONNECTION LIMIT = -1;
 
 CREATE SCHEMA kasboek;
+
+SET search_path TO kasboek;
