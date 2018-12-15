@@ -18,6 +18,12 @@
     },
     {
       "type": "panel",
+      "id": "grafana-piechart-panel",
+      "name": "Pie Chart",
+      "version": "1.3.3"
+    },
+    {
+      "type": "panel",
       "id": "graph",
       "name": "Graph",
       "version": "5.0.0"
@@ -52,7 +58,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1540151684980,
+  "iteration": 1544902021994,
   "links": [],
   "panels": [
     {
@@ -97,7 +103,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT $__time(\"date\"), SUM(CASE WHEN debit_credit = 'Af' THEN - amount::numeric\n                WHEN debit_credit = 'Bij' THEN amount::numeric\n                ELSE 0\n           END) \nFROM perfin.transactions\nWHERE $__timeFilter(\"date\")\n  AND opposing_name ~* '($opposing_name)'\n  AND description ~* '($description)'\n  AND debit_credit ~* '($debit_credit)'\nGROUP BY date\nORDER BY date asc;",
+          "rawSql": "SELECT $__time(\"date\"), SUM(CASE WHEN debit_credit = 'Af' THEN - amount::numeric\n                WHEN debit_credit = 'Bij' THEN amount::numeric\n                ELSE 0\n           END) \nFROM kasboek.transactions\nWHERE $__timeFilter(\"date\")\n  AND opposing_name ~* '($opposing_name)'\n  AND description ~* '($description)'\n  AND debit_credit ~* '($debit_credit)'\nGROUP BY date\nORDER BY date asc;",
           "refId": "A",
           "select": [
             [
@@ -239,7 +245,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  SUM(amount) as total\nFROM perfin.transactions t1\nLEFT JOIN perfin.betaalrekeningen t2 ON t2.iban = t1.opposing_iban\nWHERE t2.iban IS NULL\n  and $__timeFilter(date)\n  AND opposing_name ~* '($opposing_name)'\n  AND description ~* '($description)'\n  AND debit_credit = 'Af'\n  --AND debit_credit = $debit_credit\n\n",
+          "rawSql": "SELECT\n  SUM(amount) as total\nFROM kasboek.transactions t1\nLEFT JOIN kasboek.betaalrekeningen t2 ON t2.iban = t1.opposing_iban\nWHERE t2.iban IS NULL\n  and $__timeFilter(date)\n  AND opposing_name ~* '($opposing_name)'\n  AND description ~* '($description)'\n  AND debit_credit = 'Af'\n  --AND debit_credit = $debit_credit\n\n",
           "refId": "A",
           "select": [
             [
@@ -345,7 +351,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  SUM(amount) as total\nFROM perfin.transactions t1\nLEFT JOIN perfin.betaalrekeningen t2 ON t2.iban = t1.opposing_iban\nWHERE t2.iban IS NULL\n  AND $__timeFilter(date)\n  AND opposing_name ~* '($opposing_name)'\n  AND description ~* '($description)'\n  AND debit_credit = 'Bij'\n  --AND debit_credit = $debit_credit\n\n",
+          "rawSql": "SELECT\n  SUM(amount) as total\nFROM kasboek.transactions t1\nLEFT JOIN kasboek.betaalrekeningen t2 ON t2.iban = t1.opposing_iban\nWHERE t2.iban IS NULL\n  AND $__timeFilter(date)\n  AND opposing_name ~* '($opposing_name)'\n  AND description ~* '($description)'\n  AND debit_credit = 'Bij'\n  --AND debit_credit = $debit_credit\n\n",
           "refId": "A",
           "select": [
             [
@@ -376,7 +382,7 @@
       "datasource": "${DS_POSTGRESQL}",
       "fontSize": "100%",
       "gridPos": {
-        "h": 11,
+        "h": 7,
         "w": 5,
         "x": 14,
         "y": 3
@@ -436,7 +442,7 @@
           "hide": false,
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  sum(amount) as total, opposing_name\nFROM perfin.transactions t1\nLEFT JOIN perfin.betaalrekeningen t2 ON t2.iban = t1.opposing_iban\nWHERE t2.iban IS NULL\n  AND $__timeFilter(date)\n  AND opposing_name ~* '($opposing_name)'\n  AND description ~* '($description)'\n  AND debit_credit = 'Af'\n  GROUP BY opposing_name\n  order by total desc\nLIMIT 15\n",
+          "rawSql": "SELECT\n  sum(amount) as total, opposing_name\nFROM kasboek.transactions t1\nLEFT JOIN kasboek.betaalrekeningen t2 ON t2.iban = t1.opposing_iban\nWHERE t2.iban IS NULL\n  AND $__timeFilter(date)\n  AND opposing_name ~* '($opposing_name)'\n  AND description ~* '($description)'\n  AND debit_credit = 'Af'\n  GROUP BY opposing_name\n  order by total desc\nLIMIT 15\n",
           "refId": "A",
           "select": [
             [
@@ -467,7 +473,7 @@
       "datasource": "${DS_POSTGRESQL}",
       "fontSize": "100%",
       "gridPos": {
-        "h": 11,
+        "h": 12,
         "w": 5,
         "x": 19,
         "y": 3
@@ -527,7 +533,7 @@
           "hide": false,
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  sum(amount) as total, opposing_name\nFROM perfin.transactions t1\nLEFT JOIN perfin.betaalrekeningen t2 ON t2.iban = t1.opposing_iban\nWHERE t2.iban IS NULL\n  AND $__timeFilter(date)\n  AND opposing_name ~* '($opposing_name)'\n  AND description ~* '($description)'\n  AND debit_credit = 'Bij'\n  GROUP BY opposing_name\n  order by total desc\nLIMIT 15\n",
+          "rawSql": "SELECT\n  sum(amount) as total, opposing_name\nFROM kasboek.transactions t1\nLEFT JOIN kasboek.betaalrekeningen t2 ON t2.iban = t1.opposing_iban\nWHERE t2.iban IS NULL\n  AND $__timeFilter(date)\n  AND opposing_name ~* '($opposing_name)'\n  AND description ~* '($description)'\n  AND debit_credit = 'Bij'\n  GROUP BY opposing_name\n  order by total desc\nLIMIT 15\n",
           "refId": "A",
           "select": [
             [
@@ -595,7 +601,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "with data as (\n  SELECT \"date\", SUM(CASE WHEN debit_credit = 'Af' THEN - amount::numeric\n                WHEN debit_credit = 'Bij' THEN amount::numeric\n                ELSE 0\n               END) as amount_new\nFROM perfin.transactions t1\nLEFT JOIN perfin.betaalrekeningen t2 ON t2.iban = t1.opposing_iban\nWHERE t2.iban IS NULL\n  AND $__timeFilter(date)\n  AND opposing_name ~* '$opposing_name'\n  AND description ~* '$description'\n  AND debit_credit ~* '$debit_credit'\nGROUP BY date\norder by date ASC\n), piet as (\n  select\n    date as time,\n    sum(amount_new) over (order by date asc rows between unbounded preceding and current row) as verloop\n  from data)\nselect * from piet\norder by time asc;",
+          "rawSql": "with data as (\n  SELECT \"date\", SUM(CASE WHEN debit_credit = 'Af' THEN - amount::numeric\n                WHEN debit_credit = 'Bij' THEN amount::numeric\n                ELSE 0\n               END) as amount_new\nFROM kasboek.transactions t1\nLEFT JOIN kasboek.betaalrekeningen t2 ON t2.iban = t1.opposing_iban\nWHERE t2.iban IS NULL\n  AND $__timeFilter(date)\n  AND opposing_name ~* '$opposing_name'\n  AND description ~* '$description'\n  AND debit_credit ~* '$debit_credit'\nGROUP BY date\norder by date ASC\n), piet as (\n  select\n    date as time,\n    sum(amount_new) over (order by date asc rows between unbounded preceding and current row) as verloop\n  from data)\nselect * from piet\norder by time asc;",
           "refId": "A",
           "select": [
             [
@@ -665,7 +671,7 @@
       "datasource": "${DS_POSTGRESQL}",
       "fill": 1,
       "gridPos": {
-        "h": 4,
+        "h": 5,
         "w": 14,
         "x": 0,
         "y": 10
@@ -699,7 +705,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  count(*), $__time(\"date\")\nFROM perfin.transactions\nWHERE $__timeFilter(\"date\")\n  AND opposing_name ~* '($opposing_name)'\n  AND description ~* '($description)'\n  AND debit_credit ~* '($debit_credit)'\nGROUP BY time\nORDER BY time asc",
+          "rawSql": "SELECT\n  count(*), $__time(\"date\")\nFROM kasboek.transactions\nWHERE $__timeFilter(\"date\")\n  AND opposing_name ~* '($opposing_name)'\n  AND description ~* '($description)'\n  AND debit_credit ~* '($debit_credit)'\nGROUP BY time\nORDER BY time asc",
           "refId": "A",
           "select": [
             [
@@ -762,6 +768,62 @@
       }
     },
     {
+      "aliasColors": {},
+      "breakPoint": "50%",
+      "cacheTimeout": null,
+      "combine": {
+        "label": "Others",
+        "threshold": 0
+      },
+      "datasource": "${DS_POSTGRESQL}",
+      "fontSize": "80%",
+      "format": "short",
+      "gridPos": {
+        "h": 5,
+        "w": 5,
+        "x": 14,
+        "y": 10
+      },
+      "id": 13,
+      "interval": null,
+      "legend": {
+        "show": true,
+        "values": true
+      },
+      "legendType": "Under graph",
+      "links": [],
+      "maxDataPoints": 3,
+      "nullPointMode": "connected",
+      "pieType": "pie",
+      "strokeWidth": 1,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": false,
+          "rawSql": "SELECT\n  id AS \"time\",\n  *\nFROM kasboek.hoofdcategorieën\nORDER BY 1",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "*"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "kasboek.hoofdcategorieën",
+          "timeColumn": "id",
+          "where": []
+        }
+      ],
+      "title": "Hoofdcategorie",
+      "type": "grafana-piechart-panel",
+      "valueName": "current"
+    },
+    {
       "columns": [],
       "datasource": "${DS_POSTGRESQL}",
       "fontSize": "100%",
@@ -769,7 +831,7 @@
         "h": 9,
         "w": 20,
         "x": 0,
-        "y": 14
+        "y": 15
       },
       "id": 6,
       "links": [],
@@ -825,7 +887,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  *\nFROM perfin.transactions t1\nLEFT JOIN perfin.betaalrekeningen t2 ON t2.iban = t1.opposing_iban\nWHERE t2.iban IS NULL\n  AND $__timeFilter(date)\n  AND opposing_name ~* '$opposing_name'\n  AND description ~* '$description'\n  AND debit_credit ~* '$debit_credit'\norder by date desc\nLIMIT 1000\n",
+          "rawSql": "SELECT\n  *\nFROM kasboek.transactions t1\nLEFT JOIN kasboek.betaalrekeningen t2 ON t2.iban = t1.opposing_iban\nWHERE t2.iban IS NULL\n  AND $__timeFilter(date)\n  AND opposing_name ~* '$opposing_name'\n  AND description ~* '$description'\n  AND debit_credit ~* '$debit_credit'\norder by date desc\nLIMIT 1000\n",
           "refId": "A",
           "select": [
             [
@@ -859,7 +921,7 @@
         "h": 9,
         "w": 4,
         "x": 20,
-        "y": 14
+        "y": 15
       },
       "id": 2,
       "links": [],
@@ -915,7 +977,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  count(*), opposing_name\nFROM perfin.transactions t1\nLEFT JOIN perfin.betaalrekeningen t2 ON t2.iban = t1.opposing_iban\nWHERE t2.iban IS NULL\n  AND $__timeFilter(date)\n  AND opposing_name ~* '($opposing_name)'\n  AND description ~* '($description)'\n  AND debit_credit ~* '($debit_credit)'\nGROUP BY opposing_name\norder by count desc\nLIMIT 15\n",
+          "rawSql": "SELECT\n  count(*), opposing_name\nFROM kasboek.transactions t1\nLEFT JOIN kasboek.betaalrekeningen t2 ON t2.iban = t1.opposing_iban\nWHERE t2.iban IS NULL\n  AND $__timeFilter(date)\n  AND opposing_name ~* '($opposing_name)'\n  AND description ~* '($description)'\n  AND debit_credit ~* '($debit_credit)'\nGROUP BY opposing_name\norder by count desc\nLIMIT 15\n",
           "refId": "A",
           "select": [
             [
@@ -965,24 +1027,17 @@
             "selected": true,
             "text": ".*",
             "value": ".*"
-          },
-          {
-            "selected": false,
-            "text": "^(hoogvliet).*",
-            "value": "^(hoogvliet).*"
           }
         ],
-        "query": ".*, ^(hoogvliet).*",
+        "query": ".*",
         "skipUrlSync": false,
         "type": "custom"
       },
       {
         "allValue": null,
         "current": {
-          "selected": true,
-          "tags": [],
-          "text": ".*",
-          "value": ".*"
+          "text": ".",
+          "value": "."
         },
         "hide": 0,
         "includeAll": false,
@@ -1008,7 +1063,7 @@
       {
         "allValue": null,
         "current": {
-          "selected": true,
+          "tags": [],
           "text": ".*",
           "value": ".*"
         },
@@ -1041,7 +1096,7 @@
     ]
   },
   "time": {
-    "from": "now-90d",
+    "from": "now-5y",
     "to": "now"
   },
   "timepicker": {
@@ -1070,7 +1125,7 @@
     ]
   },
   "timezone": "",
-  "title": "Kasboek",
+  "title": "Personal Finances",
   "uid": "4tsS991mz",
-  "version": 43
+  "version": 48
 }
