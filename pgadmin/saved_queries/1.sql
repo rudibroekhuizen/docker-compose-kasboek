@@ -12,3 +12,8 @@ CREATE DATABASE kasboek
 CREATE SCHEMA kasboek;
 
 SET search_path TO kasboek;
+
+SELECT account_iban, description
+FROM transacties t1
+LEFT JOIN spaarrekeningen t2 ON t1.opposing_iban = t2.iban
+WHERE t2.iban IS null;
