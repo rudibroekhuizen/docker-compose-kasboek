@@ -27,6 +27,8 @@ CREATE TABLE kasboek.transacties
     tsvector tsvector
 );
 
+UPDATE kasboek.transacties SET tsvector = to_tsvector('simple', COALESCE(transacties.naam) || ' ' || COALESCE(transacties.rekening) || ' ' || COALESCE(transacties.tegenrekening) || ' ' || COALESCE(transacties.code) || ' ' || COALESCE(transacties.af_bij) || ' ' || COALESCE(transacties.mutatiesoort) || ' ' || COALESCE(transacties.mededeling));
+
 SELECT t1.rekening, t1.tegenrekening, t1.mededeling
 FROM transacties t1
 LEFT JOIN spaarrekeningen t2 ON t1.tegenrekening = t2.rekening
