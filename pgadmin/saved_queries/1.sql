@@ -13,7 +13,7 @@ CREATE SCHEMA kasboek;
 
 SET search_path TO kasboek;
 
-CREATE TABLE transacties
+CREATE TABLE kasboek.transacties
 (
     datum timestamp without time zone,
     naam character varying COLLATE pg_catalog."default",
