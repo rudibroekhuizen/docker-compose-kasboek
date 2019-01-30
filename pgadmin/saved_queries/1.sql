@@ -23,7 +23,8 @@ CREATE TABLE kasboek.transacties
     af_bij character varying COLLATE pg_catalog."default",
     bedrag money,
     mutatiesoort character varying COLLATE pg_catalog."default",
-    mededeling character varying COLLATE pg_catalog."default"
+    mededeling character varying COLLATE pg_catalog."default",
+    tsvector tsvector
 );
 
 SELECT t1.rekening, t1.tegenrekening, t1.mededeling
