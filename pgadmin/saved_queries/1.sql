@@ -26,7 +26,7 @@ CREATE TABLE kasboek.transacties
     mededeling character varying COLLATE pg_catalog."default"
 );
 
-SELECT account_iban, description
+SELECT t1.rekening, t1.tegenrekening, t1.mededeling
 FROM transacties t1
-LEFT JOIN spaarrekeningen t2 ON t1.opposing_iban = t2.iban
-WHERE t2.iban IS null;
+LEFT JOIN spaarrekeningen t2 ON t1.tegenrekening = t2.rekening
+WHERE t2.rekening IS null;
