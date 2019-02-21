@@ -17,15 +17,15 @@ psql --dbname=kasboek -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
   CREATE SCHEMA kasboek;
   CREATE TABLE kasboek.transactions
   (
-    date timestamp without time zone,
-    opposing_name character varying COLLATE pg_catalog."default",
-    account_iban character varying COLLATE pg_catalog."default",
-    opposing_iban character varying COLLATE pg_catalog."default",
-    type character varying COLLATE pg_catalog."default",
-    debit_credit character varying COLLATE pg_catalog."default",
-    amount money,
-    method character varying COLLATE pg_catalog."default",
-    description character varying COLLATE pg_catalog."default"
+    datum timestamp without time zone,
+    naam character varying COLLATE pg_catalog."default",
+    rekening character varying COLLATE pg_catalog."default",
+    tegenrekening character varying COLLATE pg_catalog."default",
+    code character varying COLLATE pg_catalog."default",
+    af_bij character varying COLLATE pg_catalog."default",
+    bedrag money,
+    mutatiesoort character varying COLLATE pg_catalog."default",
+    mededeling character varying COLLATE pg_catalog."default"
   )
   WITH (
       OIDS = FALSE
