@@ -14,13 +14,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "5.3.0"
-    },
-    {
-      "type": "panel",
-      "id": "grafana-piechart-panel",
-      "name": "Pie Chart",
-      "version": "1.3.3"
+      "version": "5.3.2"
     },
     {
       "type": "panel",
@@ -58,20 +52,110 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": null,
-  "iteration": 1544902021994,
+  "iteration": 1550770964373,
   "links": [],
   "panels": [
+    {
+      "columns": [],
+      "datasource": "${DS_POSTGRESQL}",
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 15,
+        "w": 3,
+        "x": 0,
+        "y": 0
+      },
+      "id": 14,
+      "links": [],
+      "pageSize": null,
+      "scroll": true,
+      "showHeader": true,
+      "sort": {
+        "col": 1,
+        "desc": true
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "dateFormat": "YYYY-MM-DD",
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 0,
+          "mappingType": 1,
+          "pattern": "count",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 2,
+          "pattern": "/.*/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "alias": "",
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT word, similarity(word, '$search') AS similarity FROM kasboek.words WHERE word % '$search'\nORDER BY similarity asc\nLIMIT 1000;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "search suggestions",
+      "transform": "table",
+      "type": "table"
+    },
     {
       "aliasColors": {},
       "bars": true,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "PostgreSQL",
+      "datasource": "${DS_POSTGRESQL}",
       "fill": 1,
       "gridPos": {
         "h": 5,
-        "w": 14,
-        "x": 0,
+        "w": 11,
+        "x": 3,
         "y": 0
       },
       "id": 5,
@@ -103,7 +187,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT $__time(\"date\"), SUM(CASE WHEN debit_credit = 'Af' THEN - amount::numeric\n                WHEN debit_credit = 'Bij' THEN amount::numeric\n                ELSE 0\n           END) \nFROM kasboek.transactions\nWHERE $__timeFilter(\"date\")\n  AND opposing_name ~* '($opposing_name)'\n  AND description ~* '($description)'\n  AND debit_credit ~* '($debit_credit)'\nGROUP BY date\nORDER BY date asc;",
+          "rawSql": "SELECT $__time(\"datum\"),\n  SUM(CASE WHEN af_bij = 'Af' THEN - bedrag::numeric\n  WHEN af_bij = 'Bij' THEN bedrag::numeric\n  ELSE 0\nEND) \nFROM kasboek.transacties t1\nLEFT JOIN kasboek.spaarrekeningen t2 ON t1.tegenrekening = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(\"datum\")\nAND tsvector @@ websearch_to_tsquery('simple','$search')\nGROUP BY datum\nORDER BY datum asc;",
           "refId": "A",
           "select": [
             [
@@ -128,7 +212,7 @@
       "thresholds": [],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Amount",
+      "title": "bedrag",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -167,7 +251,7 @@
     },
     {
       "columns": [],
-      "datasource": "PostgreSQL",
+      "datasource": "${DS_POSTGRESQL}",
       "fontSize": "100%",
       "gridPos": {
         "h": 3,
@@ -245,7 +329,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  SUM(amount) as total\nFROM kasboek.transactions t1\nLEFT JOIN kasboek.betaalrekeningen t2 ON t2.iban = t1.opposing_iban\nWHERE t2.iban IS NULL\n  and $__timeFilter(date)\n  AND opposing_name ~* '($opposing_name)'\n  AND description ~* '($description)'\n  AND debit_credit = 'Af'\n  --AND debit_credit = $debit_credit\n\n",
+          "rawSql": "SELECT\n  SUM(bedrag) as total\nFROM kasboek.transacties t1\nLEFT JOIN kasboek.spaarrekeningen t2 ON t1.tegenrekening = t2.rekening\nWHERE t2.rekening IS null\n  AND $__timeFilter(datum)\n  AND tsvector @@ websearch_to_tsquery('simple','$search')\n  AND af_bij = 'Af';",
           "refId": "A",
           "select": [
             [
@@ -267,13 +351,13 @@
           ]
         }
       ],
-      "title": "Total af",
+      "title": "totaal af",
       "transform": "table",
       "type": "table"
     },
     {
       "columns": [],
-      "datasource": "PostgreSQL",
+      "datasource": "${DS_POSTGRESQL}",
       "fontSize": "100%",
       "gridPos": {
         "h": 3,
@@ -351,7 +435,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  SUM(amount) as total\nFROM kasboek.transactions t1\nLEFT JOIN kasboek.betaalrekeningen t2 ON t2.iban = t1.opposing_iban\nWHERE t2.iban IS NULL\n  AND $__timeFilter(date)\n  AND opposing_name ~* '($opposing_name)'\n  AND description ~* '($description)'\n  AND debit_credit = 'Bij'\n  --AND debit_credit = $debit_credit\n\n",
+          "rawSql": "SELECT\n  SUM(bedrag) as total\nFROM kasboek.transacties t1\nLEFT JOIN kasboek.spaarrekeningen t2 ON t1.tegenrekening = t2.rekening\nWHERE t2.rekening IS null\n  AND $__timeFilter(datum)\n  AND tsvector @@ websearch_to_tsquery('simple','$search')\n  AND af_bij = 'Bij';",
           "refId": "A",
           "select": [
             [
@@ -373,16 +457,16 @@
           ]
         }
       ],
-      "title": "Total bij",
+      "title": "totaal bij",
       "transform": "table",
       "type": "table"
     },
     {
       "columns": [],
-      "datasource": "PostgreSQL",
+      "datasource": "${DS_POSTGRESQL}",
       "fontSize": "100%",
       "gridPos": {
-        "h": 7,
+        "h": 12,
         "w": 5,
         "x": 14,
         "y": 3
@@ -442,7 +526,7 @@
           "hide": false,
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  sum(amount) as total, opposing_name\nFROM kasboek.transactions t1\nLEFT JOIN kasboek.betaalrekeningen t2 ON t2.iban = t1.opposing_iban\nWHERE t2.iban IS NULL\n  AND $__timeFilter(date)\n  AND opposing_name ~* '($opposing_name)'\n  AND description ~* '($description)'\n  AND debit_credit = 'Af'\n  GROUP BY opposing_name\n  order by total desc\nLIMIT 15\n",
+          "rawSql": "SELECT\n  SUM(bedrag) as total, naam\nFROM kasboek.transacties t1\nLEFT JOIN kasboek.spaarrekeningen t2 ON t1.tegenrekening = t2.rekening\nWHERE t2.rekening IS null\n  AND $__timeFilter(datum)\n  AND tsvector @@ websearch_to_tsquery('simple','$search')\n  AND af_bij = 'Af'\n  GROUP BY naam\n  order by total desc\nLIMIT 15\n",
           "refId": "A",
           "select": [
             [
@@ -464,13 +548,13 @@
           ]
         }
       ],
-      "title": "Total Af",
+      "title": "overzicht af",
       "transform": "table",
       "type": "table"
     },
     {
       "columns": [],
-      "datasource": "PostgreSQL",
+      "datasource": "${DS_POSTGRESQL}",
       "fontSize": "100%",
       "gridPos": {
         "h": 12,
@@ -533,7 +617,7 @@
           "hide": false,
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  sum(amount) as total, opposing_name\nFROM kasboek.transactions t1\nLEFT JOIN kasboek.betaalrekeningen t2 ON t2.iban = t1.opposing_iban\nWHERE t2.iban IS NULL\n  AND $__timeFilter(date)\n  AND opposing_name ~* '($opposing_name)'\n  AND description ~* '($description)'\n  AND debit_credit = 'Bij'\n  GROUP BY opposing_name\n  order by total desc\nLIMIT 15\n",
+          "rawSql": "SELECT\n  SUM(bedrag) as total, naam\nFROM kasboek.transacties t1\nLEFT JOIN kasboek.spaarrekeningen t2 ON t1.tegenrekening = t2.rekening\nWHERE t2.rekening IS null\n  AND $__timeFilter(datum)\n  AND tsvector @@ websearch_to_tsquery('simple','$search')\n  AND af_bij = 'Bij'\n  GROUP BY naam\n  order by total desc\nLIMIT 15\n",
           "refId": "A",
           "select": [
             [
@@ -555,7 +639,7 @@
           ]
         }
       ],
-      "title": "Total bij",
+      "title": "overzicht bij",
       "transform": "table",
       "type": "table"
     },
@@ -564,12 +648,12 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "PostgreSQL",
+      "datasource": "${DS_POSTGRESQL}",
       "fill": 1,
       "gridPos": {
         "h": 5,
-        "w": 14,
-        "x": 0,
+        "w": 11,
+        "x": 3,
         "y": 5
       },
       "id": 7,
@@ -601,7 +685,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "with data as (\n  SELECT \"date\", SUM(CASE WHEN debit_credit = 'Af' THEN - amount::numeric\n                WHEN debit_credit = 'Bij' THEN amount::numeric\n                ELSE 0\n               END) as amount_new\nFROM kasboek.transactions t1\nLEFT JOIN kasboek.betaalrekeningen t2 ON t2.iban = t1.opposing_iban\nWHERE t2.iban IS NULL\n  AND $__timeFilter(date)\n  AND opposing_name ~* '$opposing_name'\n  AND description ~* '$description'\n  AND debit_credit ~* '$debit_credit'\nGROUP BY date\norder by date ASC\n), piet as (\n  select\n    date as time,\n    sum(amount_new) over (order by date asc rows between unbounded preceding and current row) as verloop\n  from data)\nselect * from piet\norder by time asc;",
+          "rawSql": "WITH t1 as (\nSELECT $__time(\"datum\"),\n  SUM(CASE WHEN af_bij = 'Af' THEN - bedrag::numeric\n  WHEN af_bij = 'Bij' THEN bedrag::numeric\n  ELSE 0\nEND) as amount_new\nFROM kasboek.transacties t2\nLEFT JOIN kasboek.spaarrekeningen t3 ON t2.tegenrekening = t3.rekening\nWHERE t3.rekening IS null\n  AND $__timeFilter(datum)\n  AND tsvector @@ websearch_to_tsquery('simple','$search')\nGROUP BY time\nORDER by time ASC\n), t4 AS (\n  SELECT time,\n    SUM(amount_new) over (ORDER BY time ASC rows between unbounded preceding AND current row) AS verloop\n  FROM t1)\nSELECT * FROM t4\nORDER BY time ASC;",
           "refId": "A",
           "select": [
             [
@@ -626,7 +710,7 @@
       "thresholds": [],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Cumulative sum",
+      "title": "bedrag cumulatief",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -668,12 +752,12 @@
       "bars": true,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "PostgreSQL",
+      "datasource": "${DS_POSTGRESQL}",
       "fill": 1,
       "gridPos": {
         "h": 5,
-        "w": 14,
-        "x": 0,
+        "w": 11,
+        "x": 3,
         "y": 10
       },
       "id": 4,
@@ -705,7 +789,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  count(*), $__time(\"date\")\nFROM kasboek.transactions\nWHERE $__timeFilter(\"date\")\n  AND opposing_name ~* '($opposing_name)'\n  AND description ~* '($description)'\n  AND debit_credit ~* '($debit_credit)'\nGROUP BY time\nORDER BY time asc",
+          "rawSql": "SELECT\n  count(*), $__time(\"datum\")\nFROM kasboek.transacties\nWHERE $__timeFilter(\"datum\")\nAND tsvector @@ websearch_to_tsquery('simple','$search')\nGROUP BY time\nORDER BY time asc",
           "refId": "A",
           "select": [
             [
@@ -730,7 +814,7 @@
       "thresholds": [],
       "timeFrom": null,
       "timeShift": null,
-      "title": "Count",
+      "title": "aantal",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -768,64 +852,8 @@
       }
     },
     {
-      "aliasColors": {},
-      "breakPoint": "50%",
-      "cacheTimeout": null,
-      "combine": {
-        "label": "Others",
-        "threshold": 0
-      },
-      "datasource": "PostgreSQL",
-      "fontSize": "80%",
-      "format": "short",
-      "gridPos": {
-        "h": 5,
-        "w": 5,
-        "x": 14,
-        "y": 10
-      },
-      "id": 13,
-      "interval": null,
-      "legend": {
-        "show": true,
-        "values": true
-      },
-      "legendType": "Under graph",
-      "links": [],
-      "maxDataPoints": 3,
-      "nullPointMode": "connected",
-      "pieType": "pie",
-      "strokeWidth": 1,
-      "targets": [
-        {
-          "format": "time_series",
-          "group": [],
-          "metricColumn": "none",
-          "rawQuery": false,
-          "rawSql": "SELECT\n  id AS \"time\",\n  *\nFROM kasboek.hoofdcategorieën\nORDER BY 1",
-          "refId": "A",
-          "select": [
-            [
-              {
-                "params": [
-                  "*"
-                ],
-                "type": "column"
-              }
-            ]
-          ],
-          "table": "kasboek.hoofdcategorieën",
-          "timeColumn": "id",
-          "where": []
-        }
-      ],
-      "title": "Hoofdcategorie",
-      "type": "grafana-piechart-panel",
-      "valueName": "current"
-    },
-    {
       "columns": [],
-      "datasource": "PostgreSQL",
+      "datasource": "${DS_POSTGRESQL}",
       "fontSize": "100%",
       "gridPos": {
         "h": 9,
@@ -887,7 +915,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  *\nFROM kasboek.transactions t1\nLEFT JOIN kasboek.betaalrekeningen t2 ON t2.iban = t1.opposing_iban\nWHERE t2.iban IS NULL\n  AND $__timeFilter(date)\n  AND opposing_name ~* '$opposing_name'\n  AND description ~* '$description'\n  AND debit_credit ~* '$debit_credit'\norder by date desc\nLIMIT 1000\n",
+          "rawSql": "SELECT t1.datum, t1.naam, t1.rekening, t1.tegenrekening, t1.code, t1.af_bij, t1.bedrag, t1.mutatiesoort, t1.mededeling\nFROM kasboek.transacties t1\nLEFT JOIN kasboek.spaarrekeningen t2 ON t1.tegenrekening = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(\"datum\")\nAND tsvector @@ websearch_to_tsquery('simple','$search')\nORDER BY datum asc\nLIMIT 1000;",
           "refId": "A",
           "select": [
             [
@@ -909,13 +937,13 @@
           ]
         }
       ],
-      "title": "Transactions",
+      "title": "transacties",
       "transform": "table",
       "type": "table"
     },
     {
       "columns": [],
-      "datasource": "PostgreSQL",
+      "datasource": "${DS_POSTGRESQL}",
       "fontSize": "100%",
       "gridPos": {
         "h": 9,
@@ -977,7 +1005,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  count(*), opposing_name\nFROM kasboek.transactions t1\nLEFT JOIN kasboek.betaalrekeningen t2 ON t2.iban = t1.opposing_iban\nWHERE t2.iban IS NULL\n  AND $__timeFilter(date)\n  AND opposing_name ~* '($opposing_name)'\n  AND description ~* '($description)'\n  AND debit_credit ~* '($debit_credit)'\nGROUP BY opposing_name\norder by count desc\nLIMIT 15\n",
+          "rawSql": "SELECT\n  count(*), naam\nFROM kasboek.transacties t1\nLEFT JOIN kasboek.spaarrekeningen t2 ON t1.tegenrekening = t2.rekening\nWHERE t2.rekening IS null\n  AND $__timeFilter(datum)\n  AND tsvector @@ websearch_to_tsquery('simple','$search')\nGROUP BY naam\nORDER by count desc\nLIMIT 15",
           "refId": "A",
           "select": [
             [
@@ -999,9 +1027,65 @@
           ]
         }
       ],
-      "title": "Count per opposing_name",
+      "title": "overzicht naam",
       "transform": "table",
       "type": "table"
+    },
+    {
+      "aliasColors": {},
+      "breakPoint": "50%",
+      "cacheTimeout": null,
+      "combine": {
+        "label": "Others",
+        "threshold": 0
+      },
+      "datasource": "${DS_POSTGRESQL}",
+      "fontSize": "80%",
+      "format": "short",
+      "gridPos": {
+        "h": 6,
+        "w": 4,
+        "x": 20,
+        "y": 24
+      },
+      "id": 13,
+      "interval": null,
+      "legend": {
+        "show": true,
+        "values": true
+      },
+      "legendType": "Under graph",
+      "links": [],
+      "maxDataPoints": 3,
+      "nullPointMode": "connected",
+      "pieType": "pie",
+      "strokeWidth": 1,
+      "targets": [
+        {
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": false,
+          "rawSql": "SELECT\n  id AS \"time\",\n  *\nFROM kasboek.hoofdcategorieën\nORDER BY 1",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "*"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "table": "kasboek.hoofdcategorieën",
+          "timeColumn": "id",
+          "where": []
+        }
+      ],
+      "title": "Hoofdcategorie",
+      "type": "grafana-piechart-panel",
+      "valueName": "current"
     }
   ],
   "refresh": false,
@@ -1011,87 +1095,22 @@
   "templating": {
     "list": [
       {
-        "allValue": null,
         "current": {
-          "tags": [],
-          "text": ".*",
-          "value": ".*"
+          "text": "ikea",
+          "value": "ikea"
         },
         "hide": 0,
-        "includeAll": false,
-        "label": null,
-        "multi": false,
-        "name": "opposing_name",
+        "label": "search",
+        "name": "search",
         "options": [
           {
-            "selected": true,
-            "text": ".*",
-            "value": ".*"
+            "text": "ikea",
+            "value": "ikea"
           }
         ],
-        "query": ".*",
+        "query": "ikea",
         "skipUrlSync": false,
-        "type": "custom"
-      },
-      {
-        "allValue": null,
-        "current": {
-          "text": ".",
-          "value": "."
-        },
-        "hide": 0,
-        "includeAll": false,
-        "label": null,
-        "multi": false,
-        "name": "description",
-        "options": [
-          {
-            "selected": true,
-            "text": ".*",
-            "value": ".*"
-          },
-          {
-            "selected": false,
-            "text": "aldi|albert",
-            "value": "aldi|albert"
-          }
-        ],
-        "query": ".*, aldi|albert",
-        "skipUrlSync": false,
-        "type": "custom"
-      },
-      {
-        "allValue": null,
-        "current": {
-          "tags": [],
-          "text": ".*",
-          "value": ".*"
-        },
-        "hide": 0,
-        "includeAll": false,
-        "label": null,
-        "multi": false,
-        "name": "debit_credit",
-        "options": [
-          {
-            "selected": true,
-            "text": ".*",
-            "value": ".*"
-          },
-          {
-            "selected": false,
-            "text": "Af",
-            "value": "Af"
-          },
-          {
-            "selected": false,
-            "text": "Bij",
-            "value": "Bij"
-          }
-        ],
-        "query": ".*, Af, Bij",
-        "skipUrlSync": false,
-        "type": "custom"
+        "type": "textbox"
       }
     ]
   },
@@ -1125,7 +1144,7 @@
     ]
   },
   "timezone": "",
-  "title": "Kasboek",
-  "uid": "4tsS991mz",
-  "version": 48
+  "title": "Kasboek v1.0",
+  "uid": "OAY7jblik",
+  "version": 22
 }
