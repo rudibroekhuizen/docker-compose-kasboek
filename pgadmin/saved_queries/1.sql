@@ -27,6 +27,8 @@ CREATE TABLE kasboek.transacties
     tsvector tsvector
 );
 
+COPY kasboek.transacties (datum, naam, rekening, tegenrekening, code, af_bij, bedrag, mutatiesoort, mededeling) FROM '/tmp/2018.csv' csv header;
+
 UPDATE kasboek.transacties SET tsvector = to_tsvector('simple', COALESCE(transacties.naam) || ' ' || COALESCE(transacties.rekening) || ' ' || COALESCE(transacties.tegenrekening) || ' ' || COALESCE(transacties.code) || ' ' || COALESCE(transacties.af_bij) || ' ' || COALESCE(transacties.mutatiesoort) || ' ' || COALESCE(transacties.mededeling));
 
 SELECT t1.rekening, t1.tegenrekening, t1.naam, t1.mededeling
