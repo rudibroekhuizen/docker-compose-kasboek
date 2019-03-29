@@ -19,6 +19,7 @@ services:
       - ${TRAEFIK_URL_CONFIG:-traefik.frontend.rule=Host:traefik.docker.localhost}
 
   postgres:
+    shm_size: 256M
     build: ./postgres
     ports:
       - "5432:5432"
@@ -32,6 +33,11 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - REPLICATION_USER=${REPLICATION_USER}
       - REPLICATION_PASSWORD=${REPLICATION_PASSWORD}
+    logging:
+      driver: "json-file"
+      options:
+        max-size: '10m'
+        max-file: '5' 
     networks:
       - default
       - pgnet
