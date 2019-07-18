@@ -19,8 +19,9 @@ services:
       - ${TRAEFIK_URL_CONFIG:-traefik.frontend.rule=Host:traefik.docker.localhost}
 
   postgres:
-    shm_size: 256M
     build: ./postgres
+    restart: unless-stopped
+    shm_size: 256M
     ports:
       - "5432:5432"
     volumes:
@@ -44,6 +45,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4:3.6
+    restart: unless-stopped
     environment:
       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
@@ -88,6 +90,7 @@ services:
 
   grafana:
     image: grafana/grafana:5.3.2
+    restart: unless-stopped
     volumes:
       - grafanadata:/var/lib/grafana
       - ./grafana/dashboards:/var/lib/grafana/dashboards
