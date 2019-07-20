@@ -48,7 +48,7 @@ services:
     logging: *default-logging
 
   pgadmin:
-    image: dpage/pgadmin4:3.6
+    image: dpage/pgadmin4
     restart: unless-stopped
     environment:
       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
