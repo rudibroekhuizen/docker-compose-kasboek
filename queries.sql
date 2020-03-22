@@ -13,7 +13,7 @@ CREATE SCHEMA kasboek;
 
 SET search_path TO kasboek;
 
-CREATE TABLE kasboek.transactions
+CREATE TABLE kasboek.transacties
 (
     datum timestamp without time zone,
     naam character varying COLLATE pg_catalog."default",
@@ -27,11 +27,18 @@ CREATE TABLE kasboek.transactions
     tsvector tsvector
 );
 
-COPY kasboek.transactions (datum, naam, rekening, tegenrekening, code, af_bij, bedrag, mutatiesoort, mededeling) FROM '/mnt/miniodata/bucket/yourcsv.csv' csv header;
+CREATE TABLE IF NOT EXISTS kasboek.mijn_rekeningen (
+  id INT GENERATED ALWAYS AS IDENTITY,
+  rekening text
+);
 
-UPDATE kasboek.transactions SET tsvector = to_tsvector('simple', COALESCE(transacties.naam) || ' ' || COALESCE(transacties.rekening) || ' ' || COALESCE(transacties.tegenrekening) || ' ' || COALESCE(transacties.code) || ' ' || COALESCE(transacties.af_bij) || ' ' || COALESCE(transacties.mutatiesoort) || ' ' || COALESCE(transacties.mededeling));
+INSERT INTO kasboek.mijn_rekeningen(rekening) VALUES ('NLxxINGB000xxxxxxx'); 
 
-CREATE TABLE kasboek.words AS SELECT * FROM ts_stat('SELECT tsvector FROM kasboek.transactions');
+COPY kasboek.transacties (datum, naam, rekening, tegenrekening, code, af_bij, bedrag, mutatiesoort, mededeling) FROM '/mnt/miniodata/bucket/yourcsv.csv' csv header;
+
+UPDATE kasboek.transacties SET tsvector = to_tsvector('simple', COALESCE(transacties.naam) || ' ' || COALESCE(transacties.rekening) || ' ' || COALESCE(transacties.tegenrekening) || ' ' || COALESCE(transacties.code) || ' ' || COALESCE(transacties.af_bij) || ' ' || COALESCE(transacties.mutatiesoort) || ' ' || COALESCE(transacties.mededeling));
+
+CREATE TABLE kasboek.words AS SELECT * FROM ts_stat('SELECT tsvector FROM kasboek.transacties');
 
 CREATE INDEX ON kasboek.words USING gin (word gin_trgm_ops);
 
