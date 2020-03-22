@@ -16,7 +16,7 @@ EOSQL
 
 psql --dbname=kasboek -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
   CREATE SCHEMA kasboek;
-  CREATE TABLE kasboek.transactions
+  CREATE TABLE kasboek.transacties
   (
     datum timestamp without time zone,
     naam character varying COLLATE pg_catalog."default",
