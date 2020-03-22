@@ -1,3 +1,3 @@
 # docker-kasboek
 
-Get insight in your banktransactions. Search and display using PostgreSQL and Grafana. 
+Get insight in your bank transactions. Search and display using PostgreSQL and Grafana. 
