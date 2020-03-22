@@ -27,13 +27,6 @@ CREATE TABLE kasboek.transacties
     tsvector tsvector
 );
 
-CREATE TABLE IF NOT EXISTS kasboek.mijn_rekeningen (
-  id INT GENERATED ALWAYS AS IDENTITY,
-  rekening text
-);
-
-INSERT INTO kasboek.mijn_rekeningen(rekening) VALUES ('NLxxINGB000xxxxxxx'); 
-
 COPY kasboek.transacties (datum, naam, rekening, tegenrekening, code, af_bij, bedrag, mutatiesoort, mededeling) FROM '/mnt/miniodata/bucket/yourcsv.csv' csv header;
 
 UPDATE kasboek.transacties SET tsvector = to_tsvector('simple', COALESCE(transacties.naam) || ' ' || COALESCE(transacties.rekening) || ' ' || COALESCE(transacties.tegenrekening) || ' ' || COALESCE(transacties.code) || ' ' || COALESCE(transacties.af_bij) || ' ' || COALESCE(transacties.mutatiesoort) || ' ' || COALESCE(transacties.mededeling));
@@ -41,6 +34,13 @@ UPDATE kasboek.transacties SET tsvector = to_tsvector('simple', COALESCE(transac
 CREATE TABLE kasboek.words AS SELECT * FROM ts_stat('SELECT tsvector FROM kasboek.transacties');
 
 CREATE INDEX ON kasboek.words USING gin (word gin_trgm_ops);
+
+CREATE TABLE IF NOT EXISTS kasboek.mijn_rekeningen (
+  id INT GENERATED ALWAYS AS IDENTITY,
+  rekening text
+);
+
+INSERT INTO kasboek.mijn_rekeningen(rekening) VALUES ('NLxxINGB000xxxxxxx'); 
 
 SELECT t1.rekening, t1.tegenrekening, t1.naam, t1.mededeling
 FROM kasboek.transacties t1
