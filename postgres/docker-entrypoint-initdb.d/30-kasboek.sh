@@ -3,6 +3,7 @@ set -e
 
 psql -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
   SET LC_MONETARY="nl_NL.utf8";
+  CREATE EXTENSION pg_trgm;
   CREATE DATABASE kasboek
       WITH 
       OWNER = postgres
