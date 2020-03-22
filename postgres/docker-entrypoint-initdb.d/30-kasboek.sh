@@ -25,10 +25,7 @@ psql --dbname=kasboek -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
     af_bij character varying COLLATE pg_catalog."default",
     bedrag money,
     mutatiesoort character varying COLLATE pg_catalog."default",
-    mededeling character varying COLLATE pg_catalog."default"
-  )
-  WITH (
-      OIDS = FALSE
-  )
-  TABLESPACE pg_default;
+    mededeling character varying COLLATE pg_catalog."default",
+    tsvector tsvector
+  );
 EOSQL
