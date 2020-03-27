@@ -28,9 +28,20 @@ CREATE TABLE kasboek.transacties
     tsvector tsvector
 );
 
-COPY kasboek.transacties (datum, naam, rekening, tegenrekening, code, af_bij, bedrag, mutatiesoort, mededeling) FROM '/mnt/miniodata/bucket/yourcsv.csv' csv header;
+CREATE TRIGGER create_tsv BEFORE INSERT OR UPDATE
+ON transacties FOR EACH ROW EXECUTE FUNCTION
+tsvector_update_trigger(tsvector, 'pg_catalog.simple', 
+naam,
+rekening,
+tegenrekening,
+code,
+af_bij,
+mutatiesoort,
+mededeling
+);
 
-UPDATE kasboek.transacties SET tsvector = to_tsvector('simple', COALESCE(transacties.naam) || ' ' || COALESCE(transacties.rekening) || ' ' || COALESCE(transacties.tegenrekening) || ' ' || COALESCE(transacties.code) || ' ' || COALESCE(transacties.af_bij) || ' ' || COALESCE(transacties.mutatiesoort) || ' ' || COALESCE(transacties.mededeling));
+COPY kasboek.transacties (datum, naam, rekening, tegenrekening, code, af_bij, bedrag, mutatiesoort, mededeling) 
+FROM '/mnt/miniodata/bucket/yourcsv.csv' csv header;
 
 CREATE TABLE kasboek.words AS SELECT * FROM ts_stat('SELECT tsvector FROM kasboek.transacties');
 
