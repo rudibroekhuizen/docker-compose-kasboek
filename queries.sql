@@ -15,6 +15,7 @@ SET search_path TO kasboek;
 
 CREATE TABLE kasboek.transacties
 (
+    id INT GENERATED ALWAYS AS IDENTITY,
     datum timestamp without time zone,
     naam character varying COLLATE pg_catalog."default",
     rekening character varying COLLATE pg_catalog."default",
