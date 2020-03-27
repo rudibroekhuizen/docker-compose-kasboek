@@ -29,7 +29,7 @@ CREATE TABLE kasboek.transacties
 );
 
 CREATE TRIGGER create_tsv BEFORE INSERT OR UPDATE
-ON transacties FOR EACH ROW EXECUTE FUNCTION
+ON kasboek.transacties FOR EACH ROW EXECUTE FUNCTION
 tsvector_update_trigger(tsvector, 'pg_catalog.simple', 
 naam,
 rekening,
