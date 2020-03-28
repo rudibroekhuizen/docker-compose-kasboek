@@ -15,7 +15,7 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "iteration": 1585248015642,
+  "iteration": 1585314576357,
   "links": [],
   "panels": [
     {
@@ -104,7 +104,7 @@
           ]
         }
       ],
-      "title": "search suggestions",
+      "title": "Zoek suggesties",
       "transform": "table",
       "type": "table"
     },
@@ -175,7 +175,7 @@
       "thresholds": [],
       "timeFrom": null,
       "timeShift": null,
-      "title": "bedrag",
+      "title": "Bedrag",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -255,7 +255,7 @@
           "unit": "currencyEUR"
         },
         {
-          "alias": "",
+          "alias": "bedrag",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -314,7 +314,7 @@
           ]
         }
       ],
-      "title": "totaal af",
+      "title": "Totaal af",
       "transform": "table",
       "type": "table"
     },
@@ -361,7 +361,7 @@
           "unit": "currencyEUR"
         },
         {
-          "alias": "",
+          "alias": "bedrag",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -420,7 +420,7 @@
           ]
         }
       ],
-      "title": "totaal bij",
+      "title": "Totaal bij",
       "transform": "table",
       "type": "table"
     },
@@ -467,7 +467,7 @@
           "unit": "short"
         },
         {
-          "alias": "",
+          "alias": "bedrag",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -475,7 +475,7 @@
             "rgba(50, 172, 45, 0.97)"
           ],
           "decimals": 2,
-          "pattern": "/.*/",
+          "pattern": "total",
           "thresholds": [],
           "type": "number",
           "unit": "short"
@@ -511,7 +511,7 @@
           ]
         }
       ],
-      "title": "overzicht af",
+      "title": "Overzicht af",
       "transform": "table",
       "type": "table"
     },
@@ -558,7 +558,7 @@
           "unit": "short"
         },
         {
-          "alias": "",
+          "alias": "bedrag",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -566,7 +566,7 @@
             "rgba(50, 172, 45, 0.97)"
           ],
           "decimals": 2,
-          "pattern": "/.*/",
+          "pattern": "total",
           "thresholds": [],
           "type": "number",
           "unit": "short"
@@ -602,7 +602,7 @@
           ]
         }
       ],
-      "title": "overzicht bij",
+      "title": "Overzicht bij",
       "transform": "table",
       "type": "table"
     },
@@ -673,7 +673,7 @@
       "thresholds": [],
       "timeFrom": null,
       "timeShift": null,
-      "title": "bedrag cumulatief",
+      "title": "Saldo",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -777,7 +777,7 @@
       "thresholds": [],
       "timeFrom": null,
       "timeShift": null,
-      "title": "aantal",
+      "title": "Aantal",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -900,7 +900,7 @@
           ]
         }
       ],
-      "title": "transacties",
+      "title": "Transacties",
       "transform": "table",
       "type": "table"
     },
@@ -990,65 +990,9 @@
           ]
         }
       ],
-      "title": "overzicht naam",
+      "title": "Overzicht naam",
       "transform": "table",
       "type": "table"
-    },
-    {
-      "aliasColors": {},
-      "breakPoint": "50%",
-      "cacheTimeout": null,
-      "combine": {
-        "label": "Others",
-        "threshold": 0
-      },
-      "datasource": "${DS_POSTGRESQL}",
-      "fontSize": "80%",
-      "format": "short",
-      "gridPos": {
-        "h": 6,
-        "w": 4,
-        "x": 20,
-        "y": 24
-      },
-      "id": 13,
-      "interval": null,
-      "legend": {
-        "show": true,
-        "values": true
-      },
-      "legendType": "Under graph",
-      "links": [],
-      "maxDataPoints": 3,
-      "nullPointMode": "connected",
-      "pieType": "pie",
-      "strokeWidth": 1,
-      "targets": [
-        {
-          "format": "time_series",
-          "group": [],
-          "metricColumn": "none",
-          "rawQuery": false,
-          "rawSql": "SELECT\n  id AS \"time\",\n  *\nFROM kasboek.hoofdcategorieën\nORDER BY 1",
-          "refId": "A",
-          "select": [
-            [
-              {
-                "params": [
-                  "*"
-                ],
-                "type": "column"
-              }
-            ]
-          ],
-          "table": "kasboek.hoofdcategorieën",
-          "timeColumn": "id",
-          "where": []
-        }
-      ],
-      "title": "Hoofdcategorie",
-      "type": "grafana-piechart-panel",
-      "valueName": "current"
     }
   ],
   "refresh": false,
@@ -1059,19 +1003,19 @@
     "list": [
       {
         "current": {
-          "text": "foto",
-          "value": "foto"
+          "text": "-asdfasdf",
+          "value": "-asdfasdf"
         },
         "hide": 0,
         "label": "search",
         "name": "search",
         "options": [
           {
-            "text": "foto",
-            "value": "foto"
+            "text": "-asdfasdf",
+            "value": "-asdfasdf"
           }
         ],
-        "query": "foto",
+        "query": "-asdfasdf",
         "skipUrlSync": false,
         "type": "textbox"
       }
@@ -1107,7 +1051,7 @@
     ]
   },
   "timezone": "",
-  "title": "Kasboek v1.0",
+  "title": "Kasboek",
   "uid": "OAY7jblik",
   "version": 1
 }
