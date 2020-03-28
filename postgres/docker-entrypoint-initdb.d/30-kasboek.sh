@@ -15,7 +15,9 @@ EOSQL
 
 psql --dbname=kasboek -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
   CREATE EXTENSION pg_trgm;
+  
   CREATE SCHEMA kasboek;
+  
   CREATE TABLE kasboek.transacties
   (
     id INT GENERATED ALWAYS AS IDENTITY,
@@ -29,5 +31,17 @@ psql --dbname=kasboek -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
     mutatiesoort character varying COLLATE pg_catalog."default",
     mededeling character varying COLLATE pg_catalog."default",
     tsvector tsvector
+  );
+  
+  CREATE TRIGGER create_tsv BEFORE INSERT OR UPDATE
+  ON kasboek.transacties FOR EACH ROW EXECUTE FUNCTION
+  tsvector_update_trigger(tsvector, 'pg_catalog.simple', 
+  naam,
+  rekening,
+  tegenrekening,
+  code,
+  af_bij,
+  mutatiesoort,
+  mededeling
   );
 EOSQL
