@@ -34,7 +34,6 @@ tsvector_update_trigger(tsvector, 'pg_catalog.simple',
 naam,
 rekening,
 tegenrekening,
-code,
 mededeling
 );
 
