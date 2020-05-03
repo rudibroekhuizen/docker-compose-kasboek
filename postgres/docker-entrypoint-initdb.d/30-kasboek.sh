@@ -40,8 +40,6 @@ psql --dbname=kasboek -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
   rekening,
   tegenrekening,
   code,
-  af_bij,
-  mutatiesoort,
   mededeling
   );
 EOSQL
