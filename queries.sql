@@ -35,8 +35,6 @@ naam,
 rekening,
 tegenrekening,
 code,
-af_bij,
-mutatiesoort,
 mededeling
 );
 
