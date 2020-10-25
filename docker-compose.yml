@@ -1,4 +1,4 @@
-version: '3.4'
+version: '3.8'
 
 x-logging:
   &default-logging
@@ -16,6 +16,7 @@ services:
       - 443:443
     networks:
       - web
+      - backend
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${TRAEFIK_TOML_FILE:-./traefik/traefik.toml}:/traefik.toml
@@ -43,8 +44,7 @@ services:
       - REPLICATION_USER=${REPLICATION_USER}
       - REPLICATION_PASSWORD=${REPLICATION_PASSWORD}
     networks:
-      - default
-      - pgnet
+      - backend
     logging: *default-logging
 
   pgadmin:
@@ -58,8 +58,7 @@ services:
 #   ports:
 #     - "5050:80"
     networks:
-      - web
-      - pgnet
+      - backend
     labels:
       - "traefik.backend=naturalis-pgadmin"
       - "traefik.docker.network=web"
@@ -81,8 +80,7 @@ services:
       - miniodata:/data
 #     - "/data/minioconfig:/root/.minio"
     networks:
-      - web
-      - default
+      - backend
     labels:
       - "traefik.backend=minio"
       - "traefik.docker.network=web"
@@ -106,8 +104,7 @@ services:
     expose:
       - "3000"
     networks:
-      - web
-      - default
+      - backend
     labels:
       - "traefik.backend=naturalis-grafana"
       - "traefik.docker.network=web"
@@ -118,9 +115,9 @@ services:
 
 networks:
   pgnet:
-    external: true
+    internal: true
   web:
-    external: true
+    internal: false
 
 volumes:
   pglog:
