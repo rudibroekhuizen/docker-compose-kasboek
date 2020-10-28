@@ -56,3 +56,35 @@ FROM kasboek.transacties t1
 LEFT JOIN kasboek.spaarrekeningen t2 ON t1.tegenrekening = t2.rekening
 WHERE t2.rekening IS null
 AND tsvector @@ websearch_to_tsquery('simple','ikea');
+
+
+--
+CREATE OR REPLACE FUNCTION create_md5_func() 
+  RETURNS TRIGGER
+AS
+$$
+BEGIN
+    UPDATE kasboek.transacties SET md5=md5(naam)::uuid;
+  RETURN new;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER create_md5_trigger 
+AFTER INSERT ON kasboek.transacties
+FOR EACH STATEMENT EXECUTE PROCEDURE create_md5_func();
+--
+
+--
+-- Add column md5
+ALTER TABLE kasboek.transacties ADD COLUMN md5 uuid;
+
+-- Create hash
+UPDATE kasboek.transacties SET md5 = md5(CONCAT(datum,naam,rekening,mededeling,tegenrekening,code,af_bij,bedrag,mutatiesoort,mededeling))::uuid;
+
+-- Show duplicates
+SELECT * FROM kasboek.transacties a, kasboek.transacties b WHERE (a.md5)=(b.md5) and a.ctid < b.ctid;
+
+-- Delete duplicates
+DELETE FROM kasboek.transacties a USING kasboek.transacties b WHERE (a.md5)=(b.md5) AND a.ctid < b.ctid;
+--
