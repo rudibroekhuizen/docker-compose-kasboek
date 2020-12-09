@@ -21,16 +21,16 @@ psql --dbname=kasboek -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
   CREATE TABLE kasboek.transacties
   (
     id INT GENERATED ALWAYS AS IDENTITY,
-    datum timestamp without time zone,
-    naam character varying COLLATE pg_catalog."default",
-    rekening character varying COLLATE pg_catalog."default",
-    tegenrekening character varying COLLATE pg_catalog."default",
-    code character varying COLLATE pg_catalog."default",
-    af_bij character varying COLLATE pg_catalog."default",
-    bedrag money,
-    mutatiesoort character varying COLLATE pg_catalog."default",
-    mededeling character varying COLLATE pg_catalog."default",
-    tsvector tsvector
+    datum TIMESTAMP WITHOUT TIME ZONE,
+    naam TEXT,
+    rekening TEXT,
+    tegenrekening TEXT,
+    code character TEXT,
+    af_bij TEXT,
+    bedrag MONEY,
+    mutatiesoort TEXT,
+    mededeling TEXT,
+    tsv TSVECTOR
   );
   
   CREATE TRIGGER create_tsv BEFORE INSERT OR UPDATE
