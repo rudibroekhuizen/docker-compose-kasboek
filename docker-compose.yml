@@ -13,10 +13,9 @@ services:
       - ./postgres/conf.d:/conf.d
       - miniodata:/mnt/miniodata
     environment:
+      - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - REPLICATION_USER=${REPLICATION_USER}
-      - REPLICATION_PASSWORD=${REPLICATION_PASSWORD}
     networks:
       - backend
 
