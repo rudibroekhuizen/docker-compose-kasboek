@@ -25,7 +25,7 @@ psql --dbname=kasboek -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
     naam TEXT,
     rekening TEXT,
     tegenrekening TEXT,
-    code character TEXT,
+    code TEXT,
     af_bij TEXT,
     bedrag MONEY,
     mutatiesoort TEXT,
