@@ -8,7 +8,6 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
       - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
       - ./postgres/conf.d:/conf.d
       - miniodata:/mnt/miniodata
@@ -50,7 +49,6 @@ services:
     image: grafana/grafana:7.3.4
     restart: unless-stopped
     volumes:
-      - grafanadata:/var/lib/grafana
       - ./grafana/dashboards:/var/lib/grafana/dashboards
       - ./grafana/provisioning:/etc/grafana/provisioning
     environment:
@@ -69,7 +67,4 @@ networks:
     internal: false
 
 volumes:
-  pglog:
-  pgdata:
   miniodata:
-  grafanadata:
