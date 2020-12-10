@@ -1,40 +1,4 @@
 {
-  "__inputs": [
-    {
-      "name": "DS_POSTGRESQL",
-      "label": "PostgreSQL",
-      "description": "",
-      "type": "datasource",
-      "pluginId": "postgres",
-      "pluginName": "PostgreSQL"
-    }
-  ],
-  "__requires": [
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "5.3.2"
-    },
-    {
-      "type": "panel",
-      "id": "graph",
-      "name": "Graph",
-      "version": "5.0.0"
-    },
-    {
-      "type": "datasource",
-      "id": "postgres",
-      "name": "PostgreSQL",
-      "version": "5.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "table",
-      "name": "Table",
-      "version": "5.0.0"
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -51,13 +15,19 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": null,
-  "iteration": 1588514134880,
+  "id": 1,
+  "iteration": 1607610971548,
   "links": [],
   "panels": [
     {
       "columns": [],
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fontSize": "100%",
       "gridPos": {
         "h": 15,
@@ -77,12 +47,14 @@
       "styles": [
         {
           "alias": "Time",
+          "align": "auto",
           "dateFormat": "YYYY-MM-DD",
           "pattern": "Time",
           "type": "date"
         },
         {
           "alias": "",
+          "align": "auto",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -99,6 +71,7 @@
         },
         {
           "alias": "",
+          "align": "auto",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -114,10 +87,10 @@
       ],
       "targets": [
         {
-          "alias": "",
           "format": "table",
           "group": [],
           "metricColumn": "none",
+          "queryType": "randomWalk",
           "rawQuery": true,
           "rawSql": "SELECT word, similarity(word, '$search') AS similarity FROM kasboek.words WHERE word % '$Search'\nORDER BY similarity asc\nLIMIT 100;",
           "refId": "A",
@@ -143,21 +116,29 @@
       ],
       "title": "Zoek suggesties",
       "transform": "table",
-      "type": "table"
+      "type": "table-old"
     },
     {
       "aliasColors": {},
       "bars": true,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 5,
         "w": 11,
         "x": 3,
         "y": 0
       },
+      "hiddenSeries": false,
       "id": 5,
       "legend": {
         "avg": false,
@@ -172,7 +153,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
+      "pluginVersion": "7.3.4",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -182,10 +167,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "alias": "",
           "format": "time_series",
           "group": [],
           "metricColumn": "none",
+          "queryType": "randomWalk",
           "rawQuery": true,
           "rawSql": "SELECT $__time(\"datum\"),\n  SUM(CASE WHEN af_bij = 'Af' THEN - bedrag::numeric\n  WHEN af_bij = 'Bij' THEN bedrag::numeric\n  ELSE 0\nEND) \nFROM kasboek.transacties t1\nLEFT JOIN kasboek.mijn_rekeningen t2 ON t1.tegenrekening = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(\"datum\")\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t1.af_bij::text IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\nAND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nGROUP BY datum\nORDER BY datum ASC;",
           "refId": "A",
@@ -211,6 +196,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Bedrag",
       "tooltip": {
@@ -251,7 +237,13 @@
     },
     {
       "columns": [],
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fontSize": "100%",
       "gridPos": {
         "h": 3,
@@ -271,12 +263,14 @@
       "styles": [
         {
           "alias": "Time",
+          "align": "auto",
           "dateFormat": "YYYY-MM-DD HH:mm:ss",
           "pattern": "Time",
           "type": "date"
         },
         {
           "alias": "",
+          "align": "auto",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -293,6 +287,7 @@
         },
         {
           "alias": "bedrag",
+          "align": "auto",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -309,6 +304,7 @@
         },
         {
           "alias": "",
+          "align": "auto",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -324,10 +320,10 @@
       ],
       "targets": [
         {
-          "alias": "",
           "format": "table",
           "group": [],
           "metricColumn": "none",
+          "queryType": "randomWalk",
           "rawQuery": true,
           "rawSql": "SELECT\n  SUM(bedrag) AS total\nFROM kasboek.transacties t1\nLEFT JOIN kasboek.mijn_rekeningen t2 ON t1.tegenrekening = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(datum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t1.af_bij::text IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\nAND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nAND af_bij = 'Af';",
           "refId": "A",
@@ -353,11 +349,17 @@
       ],
       "title": "Totaal af",
       "transform": "table",
-      "type": "table"
+      "type": "table-old"
     },
     {
       "columns": [],
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fontSize": "100%",
       "gridPos": {
         "h": 3,
@@ -377,12 +379,14 @@
       "styles": [
         {
           "alias": "Time",
+          "align": "auto",
           "dateFormat": "YYYY-MM-DD HH:mm:ss",
           "pattern": "Time",
           "type": "date"
         },
         {
           "alias": "",
+          "align": "auto",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -399,6 +403,7 @@
         },
         {
           "alias": "bedrag",
+          "align": "auto",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -415,6 +420,7 @@
         },
         {
           "alias": "",
+          "align": "auto",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -430,10 +436,10 @@
       ],
       "targets": [
         {
-          "alias": "",
           "format": "table",
           "group": [],
           "metricColumn": "none",
+          "queryType": "randomWalk",
           "rawQuery": true,
           "rawSql": "SELECT\n  SUM(bedrag) AS total\nFROM kasboek.transacties t1\nLEFT JOIN kasboek.mijn_rekeningen t2 ON t1.tegenrekening = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(datum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t1.af_bij::text IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\nAND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nAND af_bij = 'Bij';",
           "refId": "A",
@@ -459,11 +465,17 @@
       ],
       "title": "Totaal bij",
       "transform": "table",
-      "type": "table"
+      "type": "table-old"
     },
     {
       "columns": [],
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fontSize": "100%",
       "gridPos": {
         "h": 12,
@@ -483,12 +495,14 @@
       "styles": [
         {
           "alias": "Time",
+          "align": "auto",
           "dateFormat": "YYYY-MM-DD HH:mm:ss",
           "pattern": "Time",
           "type": "date"
         },
         {
           "alias": "",
+          "align": "auto",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -505,6 +519,7 @@
         },
         {
           "alias": "bedrag",
+          "align": "auto",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -520,11 +535,10 @@
       ],
       "targets": [
         {
-          "alias": "",
           "format": "table",
           "group": [],
-          "hide": false,
           "metricColumn": "none",
+          "queryType": "randomWalk",
           "rawQuery": true,
           "rawSql": "SELECT\n  SUM(bedrag) AS total, naam\nFROM kasboek.transacties t1\nLEFT JOIN kasboek.mijn_rekeningen t2 ON t1.tegenrekening = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(datum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (af_bij::text IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\nAND (mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nAND af_bij = 'Af'\nGROUP BY naam\nORDER BY total DESC\nLIMIT 15\n",
           "refId": "A",
@@ -550,11 +564,17 @@
       ],
       "title": "Overzicht af",
       "transform": "table",
-      "type": "table"
+      "type": "table-old"
     },
     {
       "columns": [],
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fontSize": "100%",
       "gridPos": {
         "h": 12,
@@ -574,12 +594,14 @@
       "styles": [
         {
           "alias": "Time",
+          "align": "auto",
           "dateFormat": "YYYY-MM-DD HH:mm:ss",
           "pattern": "Time",
           "type": "date"
         },
         {
           "alias": "",
+          "align": "auto",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -596,6 +618,7 @@
         },
         {
           "alias": "bedrag",
+          "align": "auto",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -611,13 +634,12 @@
       ],
       "targets": [
         {
-          "alias": "",
           "format": "table",
           "group": [],
-          "hide": false,
           "metricColumn": "none",
+          "queryType": "randomWalk",
           "rawQuery": true,
-          "rawSql": "SELECT\n  SUM(bedrag) AS total, naam\nFROM kasboek.transacties t1\nLEFT JOIN kasboek.mijn_rekeningen t2 ON t1.tegenrekening = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(datum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (af_bij::text IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\nAND (mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nAND af_bij = 'Bij'\nGROUP BY naam\nORDER BY total DESC\nLIMIT 15",
+          "rawSql": "SELECT\n  SUM(bedrag) AS total, naam\nFROM kasboek.transacties t1\nLEFT JOIN kasboek.mijn_rekeningen t2 ON t1.tegenrekening = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(datum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (af_bij::text IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\nAND (mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nAND af_bij = 'Bij'\nGROUP BY naam\nORDER BY total DESC\nLIMIT 15",
           "refId": "A",
           "select": [
             [
@@ -641,21 +663,29 @@
       ],
       "title": "Overzicht bij",
       "transform": "table",
-      "type": "table"
+      "type": "table-old"
     },
     {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 5,
         "w": 11,
         "x": 3,
         "y": 5
       },
+      "hiddenSeries": false,
       "id": 7,
       "legend": {
         "avg": false,
@@ -670,7 +700,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "connected",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
+      "pluginVersion": "7.3.4",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -680,10 +714,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "alias": "",
           "format": "time_series",
           "group": [],
           "metricColumn": "none",
+          "queryType": "randomWalk",
           "rawQuery": true,
           "rawSql": "WITH t1 as (\nSELECT $__time(\"datum\"),\n  SUM(CASE WHEN af_bij = 'Af' THEN - bedrag::numeric\n  WHEN af_bij = 'Bij' THEN bedrag::numeric\n  ELSE 0\nEND) AS amount_new\nFROM kasboek.transacties t2\nLEFT JOIN kasboek.mijn_rekeningen t3 ON t2.tegenrekening = t3.rekening\nWHERE t3.rekening IS null\nAND $__timeFilter(datum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t2.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t2.af_bij::text IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\nAND (t2.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nGROUP BY time\nORDER by time ASC\n), t4 AS (\n  SELECT time,\n    SUM(amount_new) over (ORDER BY time ASC rows between unbounded preceding AND current row) AS verloop\n  FROM t1)\nSELECT * FROM t4\nORDER BY time ASC;",
           "refId": "A",
@@ -709,6 +743,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Saldo",
       "tooltip": {
@@ -752,14 +787,22 @@
       "bars": true,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 5,
         "w": 11,
         "x": 3,
         "y": 10
       },
+      "hiddenSeries": false,
       "id": 4,
       "legend": {
         "avg": false,
@@ -774,7 +817,11 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
+      "options": {
+        "alertThreshold": true
+      },
       "percentage": false,
+      "pluginVersion": "7.3.4",
       "pointradius": 5,
       "points": false,
       "renderer": "flot",
@@ -784,10 +831,10 @@
       "steppedLine": false,
       "targets": [
         {
-          "alias": "",
           "format": "time_series",
           "group": [],
           "metricColumn": "none",
+          "queryType": "randomWalk",
           "rawQuery": true,
           "rawSql": "SELECT\n  count(*), $__time(\"datum\")\nFROM kasboek.transacties\nWHERE $__timeFilter(\"datum\")\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (af_bij::text IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\nAND (mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nGROUP BY time\nORDER BY time ASC",
           "refId": "A",
@@ -813,6 +860,7 @@
       ],
       "thresholds": [],
       "timeFrom": null,
+      "timeRegions": [],
       "timeShift": null,
       "title": "Aantal",
       "tooltip": {
@@ -853,7 +901,13 @@
     },
     {
       "columns": [],
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": "PostgreSQL",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fontSize": "100%",
       "gridPos": {
         "h": 9,
@@ -873,12 +927,14 @@
       "styles": [
         {
           "alias": "Time",
+          "align": "auto",
           "dateFormat": "YYYY-MM-DD",
           "pattern": "Time",
           "type": "date"
         },
         {
           "alias": "",
+          "align": "auto",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -895,6 +951,7 @@
         },
         {
           "alias": "",
+          "align": "auto",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -910,12 +967,12 @@
       ],
       "targets": [
         {
-          "alias": "",
           "format": "table",
           "group": [],
           "metricColumn": "none",
+          "queryType": "randomWalk",
           "rawQuery": true,
-          "rawSql": "SELECT t1.datum, t1.naam, t1.rekening, t1.tegenrekening, t1.code, t1.af_bij, t1.bedrag, t1.mutatiesoort, t1.mededeling\nFROM kasboek.transacties t1\nLEFT JOIN kasboek.mijn_rekeningen t2 ON t1.tegenrekening = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(\"datum\")\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t1.af_bij::text IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\nAND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nORDER BY 1,2 ASC\nLIMIT 1000;",
+          "rawSql": "SELECT t1.datum, t1.naam, t1.rekening, t1.tegenrekening, t1.code, t1.af_bij, t1.bedrag, t1.mutatiesoort, t1.mededeling\nFROM kasboek.transacties t1\nLEFT JOIN kasboek.mijn_rekeningen t2 ON t1.tegenrekening = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(\"datum\")\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t1.af_bij::text IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\nAND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nORDER BY 1 DESC, 2\nLIMIT 1000;",
           "refId": "A",
           "select": [
             [
@@ -939,11 +996,17 @@
       ],
       "title": "Transacties",
       "transform": "table",
-      "type": "table"
+      "type": "table-old"
     },
     {
       "columns": [],
       "datasource": "${DS_POSTGRESQL}",
+      "fieldConfig": {
+        "defaults": {
+          "custom": {}
+        },
+        "overrides": []
+      },
       "fontSize": "100%",
       "gridPos": {
         "h": 9,
@@ -963,12 +1026,14 @@
       "styles": [
         {
           "alias": "Time",
+          "align": "auto",
           "dateFormat": "YYYY-MM-DD HH:mm:ss",
           "pattern": "Time",
           "type": "date"
         },
         {
           "alias": "",
+          "align": "auto",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -985,6 +1050,7 @@
         },
         {
           "alias": "",
+          "align": "auto",
           "colorMode": null,
           "colors": [
             "rgba(245, 54, 54, 0.9)",
@@ -1029,11 +1095,11 @@
       ],
       "title": "Overzicht naam",
       "transform": "table",
-      "type": "table"
+      "type": "table-old"
     }
   ],
   "refresh": false,
-  "schemaVersion": 16,
+  "schemaVersion": 26,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -1043,6 +1109,7 @@
           "text": "",
           "value": ""
         },
+        "error": null,
         "hide": 0,
         "label": "",
         "name": "Search",
@@ -1058,8 +1125,19 @@
       },
       {
         "allValue": null,
-        "current": {},
+        "current": {
+          "text": [
+            null
+          ],
+          "value": [
+            null
+          ]
+        },
         "datasource": "${DS_POSTGRESQL}",
+        "definition": "",
+        "error": {
+          "message": "Datasource named ${DS_POSTGRESQL} was not found"
+        },
         "hide": 0,
         "includeAll": true,
         "label": null,
@@ -1079,8 +1157,19 @@
       },
       {
         "allValue": null,
-        "current": {},
+        "current": {
+          "text": [
+            null
+          ],
+          "value": [
+            null
+          ]
+        },
         "datasource": "${DS_POSTGRESQL}",
+        "definition": "",
+        "error": {
+          "message": "Datasource named ${DS_POSTGRESQL} was not found"
+        },
         "hide": 0,
         "includeAll": true,
         "label": null,
@@ -1100,8 +1189,19 @@
       },
       {
         "allValue": null,
-        "current": {},
+        "current": {
+          "text": [
+            null
+          ],
+          "value": [
+            null
+          ]
+        },
         "datasource": "${DS_POSTGRESQL}",
+        "definition": "",
+        "error": {
+          "message": "Datasource named ${DS_POSTGRESQL} was not found"
+        },
         "hide": 0,
         "includeAll": true,
         "label": null,
@@ -1122,7 +1222,7 @@
     ]
   },
   "time": {
-    "from": "now-1y",
+    "from": "now-90d",
     "to": "now"
   },
   "timepicker": {
@@ -1153,5 +1253,5 @@
   "timezone": "",
   "title": "Kasboek",
   "uid": "hVbOXT6Zk",
-  "version": 22
+  "version": 1
 }
