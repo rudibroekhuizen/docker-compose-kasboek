@@ -35,7 +35,7 @@ psql --dbname=kasboek -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
   
   CREATE TRIGGER create_tsv BEFORE INSERT OR UPDATE
   ON kasboek.transacties FOR EACH ROW EXECUTE FUNCTION
-  tsvector_update_trigger(tsvector, 'pg_catalog.simple', 
+  tsvector_update_trigger(tsv, 'pg_catalog.simple', 
   naam,
   rekening,
   tegenrekening,
@@ -45,7 +45,7 @@ psql --dbname=kasboek -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
   COPY kasboek.transacties (datum, naam, rekening, tegenrekening, code, af_bij, bedrag, mutatiesoort, mededeling) 
   FROM '/mnt/miniodata/kasboek/transacties.csv' csv header;
 
-  CREATE TABLE kasboek.words AS SELECT * FROM ts_stat('SELECT tsvector FROM kasboek.transacties');
+  CREATE TABLE kasboek.words AS SELECT * FROM ts_stat('SELECT tsv FROM kasboek.transacties');
 
   CREATE INDEX ON kasboek.words USING gin (word gin_trgm_ops);
 
