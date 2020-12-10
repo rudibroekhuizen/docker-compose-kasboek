@@ -43,7 +43,7 @@ psql --dbname=kasboek -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
   );
   
   COPY kasboek.transacties (datum, naam, rekening, tegenrekening, code, af_bij, bedrag, mutatiesoort, mededeling) 
-  FROM '/mnt/miniodata/bucket/transacties.csv' csv header;
+  FROM '/mnt/miniodata/kasboek/transacties.csv' csv header;
 
   CREATE TABLE kasboek.words AS SELECT * FROM ts_stat('SELECT tsvector FROM kasboek.transacties');
 
