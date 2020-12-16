@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1608153853141,
+  "iteration": 1608154062518,
   "links": [],
   "panels": [
     {
@@ -120,7 +120,7 @@
     },
     {
       "aliasColors": {},
-      "bars": true,
+      "bars": false,
       "dashLength": 10,
       "dashes": false,
       "datasource": "PostgreSQL",
@@ -139,7 +139,7 @@
         "y": 0
       },
       "hiddenSeries": false,
-      "id": 5,
+      "id": 7,
       "legend": {
         "avg": false,
         "current": false,
@@ -149,10 +149,10 @@
         "total": false,
         "values": false
       },
-      "lines": false,
+      "lines": true,
       "linewidth": 1,
       "links": [],
-      "nullPointMode": "null",
+      "nullPointMode": "connected",
       "options": {
         "alertThreshold": true
       },
@@ -172,7 +172,7 @@
           "metricColumn": "none",
           "queryType": "randomWalk",
           "rawQuery": true,
-          "rawSql": "SELECT $__time(\"datum\"),\n  SUM(CASE WHEN af_bij = 'Af' THEN - bedrag::numeric\n  WHEN af_bij = 'Bij' THEN bedrag::numeric\n  ELSE 0\nEND) \nFROM kasboek.transacties t1\nLEFT JOIN kasboek.mijn_rekeningen t2 ON t1.tegenrekening = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(\"datum\")\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t1.af_bij::text IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\nAND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nGROUP BY datum\nORDER BY datum ASC;",
+          "rawSql": "WITH t1 as (\nSELECT $__time(\"datum\"),\n  SUM(CASE WHEN af_bij = 'Af' THEN - bedrag::numeric\n  WHEN af_bij = 'Bij' THEN bedrag::numeric\n  ELSE 0\nEND) AS amount_new\nFROM kasboek.transacties t2\nLEFT JOIN kasboek.mijn_rekeningen t3 ON t2.tegenrekening = t3.rekening\nWHERE t3.rekening IS null\nAND $__timeFilter(datum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t2.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t2.af_bij::text IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\nAND (t2.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nGROUP BY time\nORDER by time ASC\n), t4 AS (\n  SELECT time,\n    SUM(amount_new) over (ORDER BY time ASC rows between unbounded preceding AND current row) AS verloop\n  FROM t1)\nSELECT * FROM t4\nORDER BY time ASC;",
           "refId": "A",
           "select": [
             [
@@ -198,7 +198,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Bedrag",
+      "title": "Saldo",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -667,7 +667,7 @@
     },
     {
       "aliasColors": {},
-      "bars": false,
+      "bars": true,
       "dashLength": 10,
       "dashes": false,
       "datasource": "PostgreSQL",
@@ -686,7 +686,7 @@
         "y": 5
       },
       "hiddenSeries": false,
-      "id": 7,
+      "id": 5,
       "legend": {
         "avg": false,
         "current": false,
@@ -696,10 +696,10 @@
         "total": false,
         "values": false
       },
-      "lines": true,
+      "lines": false,
       "linewidth": 1,
       "links": [],
-      "nullPointMode": "connected",
+      "nullPointMode": "null",
       "options": {
         "alertThreshold": true
       },
@@ -719,7 +719,7 @@
           "metricColumn": "none",
           "queryType": "randomWalk",
           "rawQuery": true,
-          "rawSql": "WITH t1 as (\nSELECT $__time(\"datum\"),\n  SUM(CASE WHEN af_bij = 'Af' THEN - bedrag::numeric\n  WHEN af_bij = 'Bij' THEN bedrag::numeric\n  ELSE 0\nEND) AS amount_new\nFROM kasboek.transacties t2\nLEFT JOIN kasboek.mijn_rekeningen t3 ON t2.tegenrekening = t3.rekening\nWHERE t3.rekening IS null\nAND $__timeFilter(datum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t2.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t2.af_bij::text IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\nAND (t2.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nGROUP BY time\nORDER by time ASC\n), t4 AS (\n  SELECT time,\n    SUM(amount_new) over (ORDER BY time ASC rows between unbounded preceding AND current row) AS verloop\n  FROM t1)\nSELECT * FROM t4\nORDER BY time ASC;",
+          "rawSql": "SELECT $__time(\"datum\"),\n  SUM(CASE WHEN af_bij = 'Af' THEN - bedrag::numeric\n  WHEN af_bij = 'Bij' THEN bedrag::numeric\n  ELSE 0\nEND) \nFROM kasboek.transacties t1\nLEFT JOIN kasboek.mijn_rekeningen t2 ON t1.tegenrekening = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(\"datum\")\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t1.af_bij::text IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\nAND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nGROUP BY datum\nORDER BY datum ASC;",
           "refId": "A",
           "select": [
             [
@@ -745,7 +745,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Saldo",
+      "title": "Bedrag",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -1106,7 +1106,7 @@
     "list": [
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": "",
           "value": ""
         },
@@ -1129,8 +1129,12 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "All",
-          "value": "$__all"
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": "PostgreSQL",
         "definition": "SELECT DISTINCT rekening AS __value, rekening AS __text FROM kasboek.transacties WHERE rekening is not null;",
@@ -1156,8 +1160,12 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "All",
-          "value": "$__all"
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": "PostgreSQL",
         "definition": "SELECT DISTINCT af_bij AS __value, af_bij AS __text FROM kasboek.transacties WHERE af_bij is not null;",
@@ -1183,8 +1191,12 @@
         "allValue": null,
         "current": {
           "selected": false,
-          "text": "All",
-          "value": "$__all"
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": "PostgreSQL",
         "definition": "SELECT DISTINCT mutatiesoort AS __value, mutatiesoort AS __text FROM kasboek.transacties WHERE rekening is not null;",
