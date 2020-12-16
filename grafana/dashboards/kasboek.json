@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1608153573143,
+  "iteration": 1608153853141,
   "links": [],
   "panels": [
     {
@@ -1000,7 +1000,7 @@
     },
     {
       "columns": [],
-      "datasource": "${DS_POSTGRESQL}",
+      "datasource": "PostgreSQL",
       "fieldConfig": {
         "defaults": {
           "custom": {}
@@ -1106,6 +1106,7 @@
     "list": [
       {
         "current": {
+          "selected": false,
           "text": "",
           "value": ""
         },
@@ -1115,6 +1116,7 @@
         "name": "Search",
         "options": [
           {
+            "selected": true,
             "text": "",
             "value": ""
           }
