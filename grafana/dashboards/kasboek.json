@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1607610971548,
+  "iteration": 1608153573143,
   "links": [],
   "panels": [
     {
@@ -1126,18 +1126,13 @@
       {
         "allValue": null,
         "current": {
-          "text": [
-            null
-          ],
-          "value": [
-            null
-          ]
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
         },
-        "datasource": "${DS_POSTGRESQL}",
-        "definition": "",
-        "error": {
-          "message": "Datasource named ${DS_POSTGRESQL} was not found"
-        },
+        "datasource": "PostgreSQL",
+        "definition": "SELECT DISTINCT rekening AS __value, rekening AS __text FROM kasboek.transacties WHERE rekening is not null;",
+        "error": null,
         "hide": 0,
         "includeAll": true,
         "label": null,
@@ -1158,18 +1153,13 @@
       {
         "allValue": null,
         "current": {
-          "text": [
-            null
-          ],
-          "value": [
-            null
-          ]
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
         },
-        "datasource": "${DS_POSTGRESQL}",
-        "definition": "",
-        "error": {
-          "message": "Datasource named ${DS_POSTGRESQL} was not found"
-        },
+        "datasource": "PostgreSQL",
+        "definition": "SELECT DISTINCT af_bij AS __value, af_bij AS __text FROM kasboek.transacties WHERE af_bij is not null;",
+        "error": null,
         "hide": 0,
         "includeAll": true,
         "label": null,
@@ -1190,18 +1180,13 @@
       {
         "allValue": null,
         "current": {
-          "text": [
-            null
-          ],
-          "value": [
-            null
-          ]
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
         },
-        "datasource": "${DS_POSTGRESQL}",
-        "definition": "",
-        "error": {
-          "message": "Datasource named ${DS_POSTGRESQL} was not found"
-        },
+        "datasource": "PostgreSQL",
+        "definition": "SELECT DISTINCT mutatiesoort AS __value, mutatiesoort AS __text FROM kasboek.transacties WHERE rekening is not null;",
+        "error": null,
         "hide": 0,
         "includeAll": true,
         "label": null,
