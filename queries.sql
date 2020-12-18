@@ -38,7 +38,7 @@ mededeling
 );
 
 COPY kasboek.transacties (datum, naam, rekening, tegenrekening, code, af_bij, bedrag, mutatiesoort, mededeling) 
-FROM '/mnt/miniodata/bucket/yourcsv.csv' csv header;
+FROM '/mnt/miniodata/kasboek/yourcsv.csv' csv header;
 
 CREATE TABLE kasboek.words AS SELECT * FROM ts_stat('SELECT tsvector FROM kasboek.transacties');
 
