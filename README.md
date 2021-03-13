@@ -19,7 +19,7 @@ docker-compose up -d
 Browse naar het dashboard http://localhost:3000/dashboards.
 
 
-Connect to database:
+Verbinden met de database:
 ```sh
 docker-compose exec postgres bash -c 'psql -d kasboek -U $POSTGRES_USER $POSTGRES_DB'
 ```
