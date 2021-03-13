@@ -5,16 +5,21 @@ Geeft inzicht in banktransacties. Gebruikt PostgreSQL en Grafana voor zoeken en 
 ## Gebruik
 
 Start de minio container:
-```
+```sh
 docker-compose up -d minio
 ```
 
 Upload file met naam transacties.csv via http://localhost:9000/minio/kasboek/. 
 
 Start overige containers:
-
-```
+```sh
 docker-compose up -d
 ```
 
 Browse naar het dashboard http://localhost:3000/dashboards.
+
+
+Connect to database:
+```sh
+docker-compose exec postgres bash -c 'psql -d kasboek -U $POSTGRES_USER $POSTGRES_DB'
+```
