@@ -14,8 +14,6 @@ services:
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    networks:
-      - backend
 
   pgadmin:
     image: dpage/pgadmin4
@@ -25,9 +23,6 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
     ports:
       - "5050:80"
-    networks:
-      - backend
-      - web
 
   minio:
     image: minio/minio:RELEASE.2020-12-03T05-49-24Z
@@ -41,8 +36,6 @@ services:
       - "9000:9000"
     volumes:
       - miniodata:/data
-    networks:
-      - web
 
   grafana:
     image: grafana/grafana:7.3.4
@@ -55,15 +48,6 @@ services:
       - GF_INSTALL_PLUGINS=${GF_INSTALL_PLUGINS}
     ports:
       - "3000:3000"
-    networks:
-      - backend
-      - web
-
-networks:
-  backend:
-    internal: true
-  web:
-    internal: false
 
 volumes:
   miniodata:
