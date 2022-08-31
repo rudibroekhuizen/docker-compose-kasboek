@@ -40,7 +40,7 @@ psql --dbname=kasboek -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
   mededeling
   );
   
-  CREATE TABLE IF NOT EXISTS mijn_rekeningen_ing (
+  CREATE TABLE IF NOT EXISTS mijn_rekeningen (
   id INT GENERATED ALWAYS AS IDENTITY,
   rekening text
   );
