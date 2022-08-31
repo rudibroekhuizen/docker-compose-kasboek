@@ -1,5 +1,5 @@
 -- Insert ING transactions
-CREATE OR REPLACE PROCEDURE copy_from_ing(
+CREATE OR REPLACE PROCEDURE kasboek.copy_from_ing(
    _source_file text
 ) AS
 $$
@@ -14,7 +14,7 @@ $$ LANGUAGE plpgsql;
 
 
 -- Insert ASN transactions
-CREATE OR REPLACE PROCEDURE copy_from_asn(
+CREATE OR REPLACE PROCEDURE kasboek.copy_from_asn(
    _source_file text
 ) AS
 $$
