@@ -16,9 +16,7 @@ EOSQL
 psql --dbname=kasboek -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
   CREATE EXTENSION pg_trgm;
   
-  CREATE SCHEMA kasboek;
-  
-  CREATE TABLE kasboek.transacties_ing
+  CREATE TABLE transacties_ing
   (
     id INT GENERATED ALWAYS AS IDENTITY,
     datum TIMESTAMP WITHOUT TIME ZONE,
@@ -34,7 +32,7 @@ psql --dbname=kasboek -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
   );
   
   CREATE TRIGGER create_tsv_ing BEFORE INSERT OR UPDATE
-  ON kasboek.transacties_ing FOR EACH ROW EXECUTE FUNCTION
+  ON transacties_ing FOR EACH ROW EXECUTE FUNCTION
   tsvector_update_trigger(tsv, 'pg_catalog.simple', 
   naam,
   rekening,
@@ -42,7 +40,7 @@ psql --dbname=kasboek -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
   mededeling
   );
   
-  CREATE TABLE IF NOT EXISTS kasboek.mijn_rekeningen_ing (
+  CREATE TABLE IF NOT EXISTS mijn_rekeningen_ing (
   id INT GENERATED ALWAYS AS IDENTITY,
   rekening text
   );
