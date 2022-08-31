@@ -23,7 +23,27 @@ CREATE OR REPLACE PROCEDURE copy_from_asn(
 ) AS
 $$
 BEGIN
-  EXECUTE format('COPY transacties_asn (datum, naam, rekening, tegenrekening, code, af_bij, bedrag, mutatiesoort, mededeling) FROM %L csv header', _source_file);
+  EXECUTE format('COPY transacties_asn (
+    boekingsdatum,
+    opdrachtgeversrekening,
+    tegenrekeningnummer,
+    naam_tegenrekening,
+    adres,
+    postcode,
+    plaats,
+    valutasoort_rekening,
+    saldo_rekening_voor_mutatie,
+    valutasoort_mutatie,
+    transactiebedrag,
+    journaaldatum,
+    valutadatum,
+    interne_transactiecode,
+    globale_transactiecode,
+    volgnummer_transactie,
+    betalingskenmerk,
+    omschrijving,
+    afschriftnummer
+    ) FROM %L csv header', _source_file);
   CREATE TABLE words_asn AS SELECT * FROM ts_stat('SELECT tsv FROM transacties_asn');
   CREATE INDEX ON words_asn USING gin (word gin_trgm_ops);
   COMMIT;
