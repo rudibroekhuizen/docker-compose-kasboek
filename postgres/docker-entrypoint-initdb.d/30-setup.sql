@@ -1,3 +1,6 @@
+-- Connect to database
+\connect kasboek
+
 -- Insert ING transactions
 CREATE OR REPLACE PROCEDURE copy_from_ing(
    _source_file text
