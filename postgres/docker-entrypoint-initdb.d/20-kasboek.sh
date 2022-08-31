@@ -18,7 +18,7 @@ psql --dbname=kasboek -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
   
   CREATE SCHEMA kasboek;
   
-  CREATE TABLE kasboek.transacties
+  CREATE TABLE kasboek.transacties_ing
   (
     id INT GENERATED ALWAYS AS IDENTITY,
     datum TIMESTAMP WITHOUT TIME ZONE,
@@ -33,8 +33,8 @@ psql --dbname=kasboek -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
     tsv TSVECTOR
   );
   
-  CREATE TRIGGER create_tsv BEFORE INSERT OR UPDATE
-  ON kasboek.transacties FOR EACH ROW EXECUTE FUNCTION
+  CREATE TRIGGER create_tsv_ing BEFORE INSERT OR UPDATE
+  ON kasboek.transacties_ing FOR EACH ROW EXECUTE FUNCTION
   tsvector_update_trigger(tsv, 'pg_catalog.simple', 
   naam,
   rekening,
@@ -42,14 +42,7 @@ psql --dbname=kasboek -v ON_ERROR_STOP=1 --username="$POSTGRES_USER" <<-EOSQL
   mededeling
   );
   
-  COPY kasboek.transacties (datum, naam, rekening, tegenrekening, code, af_bij, bedrag, mutatiesoort, mededeling) 
-  FROM '/mnt/miniodata/kasboek/transacties.csv' csv header;
-
-  CREATE TABLE kasboek.words AS SELECT * FROM ts_stat('SELECT tsv FROM kasboek.transacties');
-
-  CREATE INDEX ON kasboek.words USING gin (word gin_trgm_ops);
-
-  CREATE TABLE IF NOT EXISTS kasboek.mijn_rekeningen (
+  CREATE TABLE IF NOT EXISTS kasboek.mijn_rekeningen_ing (
   id INT GENERATED ALWAYS AS IDENTITY,
   rekening text
   );
