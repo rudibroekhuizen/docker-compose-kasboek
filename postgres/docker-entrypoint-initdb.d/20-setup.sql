@@ -1,3 +1,4 @@
+--
 -- Create database
 SET LC_MONETARY="nl_NL.utf8";
 CREATE DATABASE kasboek
