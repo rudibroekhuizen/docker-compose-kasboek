@@ -4,9 +4,9 @@ CREATE OR REPLACE PROCEDURE copy_from_ing(
 ) AS
 $$
 BEGIN
-  EXECUTE format('COPY kasboek.transacties_ing (datum, naam, rekening, tegenrekening, code, af_bij, bedrag, mutatiesoort, mededeling) FROM %L csv header', _source_file);
-  CREATE TABLE kasboek.words_ing AS SELECT * FROM ts_stat('SELECT tsv FROM kasboek.transacties_ing');
-  CREATE INDEX ON kasboek.words_ing USING gin (word gin_trgm_ops);
+  EXECUTE format('COPY transacties_ing (datum, naam, rekening, tegenrekening, code, af_bij, bedrag, mutatiesoort, mededeling) FROM %L csv header', _source_file);
+  CREATE TABLE words_ing AS SELECT * FROM ts_stat('SELECT tsv FROM transacties_ing');
+  CREATE INDEX ON words_ing USING gin (word gin_trgm_ops);
   COMMIT;
 END;
 $$ LANGUAGE plpgsql;
@@ -20,9 +20,9 @@ CREATE OR REPLACE PROCEDURE copy_from_asn(
 ) AS
 $$
 BEGIN
-  EXECUTE format('COPY kasboek.transacties_asn (datum, naam, rekening, tegenrekening, code, af_bij, bedrag, mutatiesoort, mededeling) FROM %L csv header', _source_file);
-  CREATE TABLE kasboek.words_asn AS SELECT * FROM ts_stat('SELECT tsv FROM kasboek.transacties_asn');
-  CREATE INDEX ON kasboek.words_asn USING gin (word gin_trgm_ops);
+  EXECUTE format('COPY transacties_asn (datum, naam, rekening, tegenrekening, code, af_bij, bedrag, mutatiesoort, mededeling) FROM %L csv header', _source_file);
+  CREATE TABLE words_asn AS SELECT * FROM ts_stat('SELECT tsv FROM transacties_asn');
+  CREATE INDEX ON words_asn USING gin (word gin_trgm_ops);
   COMMIT;
 END;
 $$ LANGUAGE plpgsql;
