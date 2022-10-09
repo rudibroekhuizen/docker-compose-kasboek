@@ -38,10 +38,9 @@ services:
       - miniodata:/data
 
   grafana:
-    image: grafana/grafana:7.3.4
+    image: grafana/grafana:9.1.7-ubuntu
     restart: unless-stopped
     volumes:
-      - ./grafana/dashboards:/var/lib/grafana/dashboards
       - ./grafana/provisioning:/etc/grafana/provisioning
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
