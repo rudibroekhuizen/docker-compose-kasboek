@@ -1,3 +1,7 @@
+--
+-- Connect to database
+\connect kasboek
+
 -- Create group readonly
 CREATE ROLE readonly;
 GRANT CONNECT ON DATABASE kasboek TO readonly;
