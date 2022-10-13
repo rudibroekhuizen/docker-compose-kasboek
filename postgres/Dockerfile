@@ -1,4 +1,4 @@
-FROM postgres:13
+FROM postgres:14
 
 RUN localedef -i nl_NL -c -f UTF-8 -A /usr/share/locale/locale.alias nl_NL.UTF-8
 ENV LANG nl_NL.utf8
