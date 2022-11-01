@@ -4,7 +4,7 @@ Geeft inzicht in banktransacties. Gebruikt PostgreSQL en Grafana voor zoeken en 
 
 ## Gebruik
 
-Start de minio container:
+Start de containers:
 ```sh
 docker-compose up -d
 ```
