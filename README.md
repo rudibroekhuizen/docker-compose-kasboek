@@ -9,7 +9,7 @@ Start de containers:
 docker-compose up -d
 ```
 
-Upload file met naam transacties.csv via http://localhost:9000/minio/kasboek/. 
+Upload .csv file via http://localhost:9000/minio/kasboek/. 
 
 Verbind met de database:
 ```sh
