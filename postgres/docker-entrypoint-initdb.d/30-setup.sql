@@ -18,8 +18,7 @@ BEGIN
     mutatiesoort,
     mededeling
     ) FROM %L csv header', _source_file);
-  CREATE TABLE words_ing AS SELECT * FROM ts_stat('SELECT tsv FROM transacties_ing');
-  CREATE INDEX ON words_ing USING gin (word gin_trgm_ops);
+  INSERT INTO words_ing SELECT * FROM ts_stat('SELECT tsv FROM transacties_ing');
   COMMIT;
 END;
 $$ LANGUAGE plpgsql;
@@ -54,8 +53,7 @@ BEGIN
     omschrijving,
     afschriftnummer
     ) FROM %L csv header', _source_file);
-  CREATE TABLE words_asn AS SELECT * FROM ts_stat('SELECT tsv FROM transacties_asn');
-  CREATE INDEX ON words_asn USING gin (word gin_trgm_ops);
+  INSERT INTO words_asn SELECT * FROM ts_stat('SELECT tsv FROM transacties_asn');
   COMMIT;
 END;
 $$ LANGUAGE plpgsql;
