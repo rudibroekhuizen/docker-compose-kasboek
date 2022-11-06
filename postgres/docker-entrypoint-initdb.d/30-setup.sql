@@ -7,7 +7,17 @@ CREATE OR REPLACE PROCEDURE copy_from_ing(
 ) AS
 $$
 BEGIN
-  EXECUTE format('COPY transacties_ing (datum, naam, rekening, tegenrekening, code, af_bij, bedrag, mutatiesoort, mededeling) FROM %L csv header', _source_file);
+  EXECUTE format('COPY transacties_ing (
+    datum,
+    naam,
+    rekening,
+    tegenrekening,
+    code,
+    af_bij,
+    bedrag,
+    mutatiesoort,
+    mededeling
+    ) FROM %L csv header', _source_file);
   CREATE TABLE words_ing AS SELECT * FROM ts_stat('SELECT tsv FROM transacties_ing');
   CREATE INDEX ON words_ing USING gin (word gin_trgm_ops);
   COMMIT;
