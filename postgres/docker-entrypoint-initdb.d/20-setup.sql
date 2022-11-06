@@ -41,6 +41,14 @@ tsvector_update_trigger(tsv, 'pg_catalog.simple',
   mededeling
 );
 
+CREATE TABLE words_ing
+(
+  word text,
+  ndoc integer,
+  nentry integer
+);
+
+
 
 -- ASN
 CREATE TABLE transacties_asn
@@ -76,6 +84,14 @@ tsvector_update_trigger(tsv, 'pg_catalog.simple',
   naam_tegenrekening,
   omschrijving
 );
+
+CREATE TABLE words_asn
+(
+  word text,
+  ndoc integer,
+  nentry integer
+);
+
 
 
 -- All
