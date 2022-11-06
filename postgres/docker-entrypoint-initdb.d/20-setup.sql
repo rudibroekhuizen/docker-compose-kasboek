@@ -48,6 +48,9 @@ CREATE TABLE words_ing
   nentry integer
 );
 
+CREATE INDEX words_ing_word_idx
+    ON words_ing USING gin
+    (word gin_trgm_ops);
 
 
 -- ASN
@@ -92,6 +95,9 @@ CREATE TABLE words_asn
   nentry integer
 );
 
+CREATE INDEX words_asn_word_idx
+    ON words_asn USING gin
+    (word gin_trgm_ops);
 
 
 -- All
