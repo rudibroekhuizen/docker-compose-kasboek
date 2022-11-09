@@ -1,3 +1,4 @@
+--
 -- Connect to database
 \connect kasboek
 
@@ -18,7 +19,45 @@ BEGIN
     mutatiesoort,
     mededeling
     ) FROM %L csv header', _source_file);
-  COMMIT;
+  MERGE INTO transacties_ing ti
+  USING transacties_ing_raw tir
+  ON (ti.md5_hash = tir.md5_hash)
+  WHEN MATCHED THEN
+  UPDATE SET
+    datum = tir.datum,
+    naam = tir.naam,
+    rekening = tir.rekening,
+    tegenrekening = tir.tegenrekening,
+    code = tir.code,
+    af_bij = tir.af_bij,
+    bedrag = tir.bedrag,
+    mutatiesoort = tir.mutatiesoort,
+    mededeling = tir.mededeling,
+    md5_hash = tir.md5_hash
+  WHEN NOT MATCHED THEN
+  INSERT (
+    datum,
+    naam,
+    rekening,
+    tegenrekening,
+    code,
+    af_bij,
+    bedrag,
+    mutatiesoort,
+    mededeling,
+    md5_hash)
+  VALUES (
+    tir.datum,
+    tir.naam,
+    tir.rekening,
+    tir.tegenrekening,
+    tir.code,
+    tir.af_bij,
+    tir.bedrag,
+    tir.mutatiesoort,
+    tir.mededeling,
+    tir.md5_hash);
+  COMMIT; 
 END;
 $$ LANGUAGE plpgsql;
 
@@ -52,6 +91,74 @@ BEGIN
     omschrijving,
     afschriftnummer
     ) FROM %L csv header', _source_file);
+  MERGE INTO transacties_asn ta
+  USING transacties_asn_raw tar
+  ON (ta.md5_hash = tar.md5_hash)
+  WHEN MATCHED THEN
+  UPDATE SET
+    boekingsdatum = tar.boekingsdatum,
+    opdrachtgeversrekening = tar.opdrachtgeversrekening,
+    tegenrekeningnummer = tar.tegenrekeningnummer,
+    naam_tegenrekening = tar.naam_tegenrekening,
+    adres = tar.adres,
+    postcode = tar.postcode,
+    plaats = tar.plaats,
+    valutasoort_rekening = tar.valutasoort_rekening,
+    saldo_rekening_voor_mutatie = tar.saldo_rekening_voor_mutatie,
+    valutasoort_mutatie = tar.valutasoort_mutatie,
+    transactiebedrag = tar.transactiebedrag,
+    journaaldatum = tar.journaaldatum,
+    valutadatum = tar.valutadatum,
+    interne_transactiecode = tar.interne_transactiecode,
+    globale_transactiecode = tar.globale_transactiecode,
+    volgnummer_transactie = tar.volgnummer_transactie,
+    betalingskenmerk = tar.betalingskenmerk,
+    omschrijving = tar.omschrijving,
+    afschriftnummer = tar.afschriftnummer,
+	md5_hash = tar.md5_hash
+  WHEN NOT MATCHED THEN
+  INSERT (
+    boekingsdatum,
+    opdrachtgeversrekening,
+    tegenrekeningnummer,
+    naam_tegenrekening,
+    adres,
+    postcode,
+    plaats,
+    valutasoort_rekening,
+    saldo_rekening_voor_mutatie,
+    valutasoort_mutatie,
+    transactiebedrag,
+    journaaldatum,
+    valutadatum,
+    interne_transactiecode,
+    globale_transactiecode,
+    volgnummer_transactie,
+    betalingskenmerk,
+    omschrijving,
+    afschriftnummer,
+    md5_hash)
+  VALUES (
+    tar.boekingsdatum,
+    tar.opdrachtgeversrekening,
+    tar.tegenrekeningnummer,
+    tar.naam_tegenrekening,
+    tar.adres,
+    tar.postcode,
+    tar.plaats,
+    tar.valutasoort_rekening,
+    tar.saldo_rekening_voor_mutatie,
+    tar.valutasoort_mutatie,
+    tar.transactiebedrag,
+    tar.journaaldatum,
+    tar.valutadatum,
+    tar.interne_transactiecode,
+    tar.globale_transactiecode,
+    tar.volgnummer_transactie,
+    tar.betalingskenmerk,
+    tar.omschrijving,
+    tar.afschriftnummer,
+    tar.md5_hash);
   COMMIT;
 END;
 $$ LANGUAGE plpgsql;
