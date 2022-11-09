@@ -17,6 +17,19 @@ CREATE EXTENSION pg_trgm;
 
 
 -- ING
+CREATE TABLE transacties_ing_raw
+(
+  datum TIMESTAMP WITHOUT TIME ZONE,
+  naam TEXT,
+  rekening TEXT,
+  tegenrekening TEXT,
+  code TEXT,
+  af_bij TEXT,
+  bedrag MONEY,
+  mutatiesoort TEXT,
+  mededeling TEXT
+);
+
 CREATE TABLE transacties_ing
 (
   id INT GENERATED ALWAYS AS IDENTITY,
@@ -65,6 +78,30 @@ CREATE TRIGGER create_md5_hash_ing BEFORE INSERT OR UPDATE ON transacties_ing FO
 
 
 -- ASN
+CREATE TABLE transacties_asn_raw
+(
+  id INT GENERATED ALWAYS AS IDENTITY,
+  boekingsdatum TIMESTAMP WITHOUT TIME ZONE,
+  opdrachtgeversrekening TEXT,
+  tegenrekeningnummer TEXT,
+  naam_tegenrekening TEXT,
+  adres TEXT,
+  postcode TEXT,
+  plaats TEXT,
+  valutasoort_rekening TEXT,
+  saldo_rekening_voor_mutatie MONEY,
+  valutasoort_mutatie TEXT,
+  transactiebedrag MONEY,
+  journaaldatum TEXT,
+  valutadatum TEXT,
+  interne_transactiecode TEXT,
+  globale_transactiecode TEXT,
+  volgnummer_transactie TEXT,
+  betalingskenmerk TEXT,
+  omschrijving TEXT,
+  afschriftnummer TEXT
+);
+
 CREATE TABLE transacties_asn
 (
   id INT GENERATED ALWAYS AS IDENTITY,
