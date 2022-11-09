@@ -162,8 +162,10 @@ $$ LANGUAGE 'plpgsql';
 CREATE TRIGGER create_md5_hash_asn BEFORE INSERT OR UPDATE ON transacties_asn_raw FOR EACH ROW EXECUTE PROCEDURE create_md5_hash_asn();
 CREATE TRIGGER create_md5_hash_asn BEFORE INSERT OR UPDATE ON transacties_asn FOR EACH ROW EXECUTE PROCEDURE create_md5_hash_asn();
 
+
 -- All
 CREATE TABLE IF NOT EXISTS mijn_rekeningen (
 id INT GENERATED ALWAYS AS IDENTITY,
 rekening text
 );
+--
