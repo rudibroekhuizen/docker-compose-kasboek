@@ -57,6 +57,8 @@ BEGIN
     tir.mutatiesoort,
     tir.mededeling,
     tir.md5_hash);
+  TRUNCATE TABLE words_ing;
+  INSERT INTO words_ing SELECT * FROM ts_stat('SELECT tsv FROM transacties_ing');
   COMMIT; 
 END;
 $$ LANGUAGE plpgsql;
@@ -160,6 +162,8 @@ BEGIN
     tar.afschriftnummer,
     tar.md5_hash);
   COMMIT;
+  TRUNCATE TABLE words_asn;
+  INSERT INTO words_asn SELECT * FROM ts_stat('SELECT tsv FROM transacties_asn');
 END;
 $$ LANGUAGE plpgsql;
 
