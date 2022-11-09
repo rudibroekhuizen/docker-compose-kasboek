@@ -82,7 +82,6 @@ CREATE TRIGGER create_md5_hash_ing BEFORE INSERT OR UPDATE ON transacties_ing_ra
 -- ASN
 CREATE TABLE transacties_asn_raw
 (
-  id INT GENERATED ALWAYS AS IDENTITY,
   boekingsdatum TIMESTAMP WITHOUT TIME ZONE,
   opdrachtgeversrekening TEXT,
   tegenrekeningnummer TEXT,
