@@ -29,7 +29,8 @@ CREATE TABLE transacties_ing
   bedrag MONEY,
   mutatiesoort TEXT,
   mededeling TEXT,
-  tsv TSVECTOR
+  tsv TSVECTOR,
+  md5_hash UUID
 );
   
 CREATE TRIGGER create_tsv_ing BEFORE INSERT OR UPDATE
@@ -49,8 +50,18 @@ CREATE TABLE words_ing
 );
 
 CREATE INDEX words_ing_word_idx
-    ON words_ing USING gin
-    (word gin_trgm_ops);
+ON words_ing USING gin
+(word gin_trgm_ops);
+
+CREATE OR REPLACE function create_md5_hash_ing() RETURNS TRIGGER AS 
+$$
+  BEGIN 
+    NEW.md5_hash := md5(ROW(NEW.datum, NEW.naam, NEW.rekening, NEW.tegenrekening, NEW.code, NEW.af_bij, NEW.bedrag, NEW.mutatiesoort, NEW.mededeling)::text)::uuid;
+    RETURN NEW;
+  END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER create_md5_hash_ing BEFORE INSERT OR UPDATE ON transacties_ing FOR EACH ROW EXECUTE PROCEDURE create_md5_hash_ing();
 
 
 -- ASN
@@ -76,7 +87,8 @@ CREATE TABLE transacties_asn
   betalingskenmerk TEXT,
   omschrijving TEXT,
   afschriftnummer TEXT,
-  tsv TSVECTOR
+  tsv TSVECTOR,
+  md5_hash UUID
 );
 
 CREATE TRIGGER create_tsv_asn BEFORE INSERT OR UPDATE
@@ -96,9 +108,18 @@ CREATE TABLE words_asn
 );
 
 CREATE INDEX words_asn_word_idx
-    ON words_asn USING gin
-    (word gin_trgm_ops);
+ON words_asn USING gin
+(word gin_trgm_ops);
 
+CREATE OR REPLACE function create_md5_hash_asn() RETURNS TRIGGER AS 
+$$
+  BEGIN 
+    NEW.md5_hash := md5(ROW(NEW.boekingsdatum, NEW.tegenrekeningnummer, NEW.naam_tegenrekening, NEW.transactiebedrag, NEW.journaaldatum, NEW.volgnummer_transactie, NEW.omschrijving)::text)::uuid;
+    RETURN NEW;
+  END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER create_md5_hash_asn BEFORE INSERT OR UPDATE ON transacties_asn FOR EACH ROW EXECUTE PROCEDURE create_md5_hash_asn();
 
 -- All
 CREATE TABLE IF NOT EXISTS mijn_rekeningen (
