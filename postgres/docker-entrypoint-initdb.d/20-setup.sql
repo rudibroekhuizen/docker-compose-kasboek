@@ -27,7 +27,8 @@ CREATE TABLE transacties_ing_raw
   af_bij TEXT,
   bedrag MONEY,
   mutatiesoort TEXT,
-  mededeling TEXT
+  mededeling TEXT,
+  md5_hash UUID
 );
 
 CREATE TABLE transacties_ing
@@ -74,6 +75,7 @@ $$
   END;
 $$ LANGUAGE 'plpgsql';
 
+CREATE TRIGGER create_md5_hash_ing BEFORE INSERT OR UPDATE ON transacties_ing_raw FOR EACH ROW EXECUTE PROCEDURE create_md5_hash_ing();
 CREATE TRIGGER create_md5_hash_ing BEFORE INSERT OR UPDATE ON transacties_ing FOR EACH ROW EXECUTE PROCEDURE create_md5_hash_ing();
 
 
@@ -99,7 +101,8 @@ CREATE TABLE transacties_asn_raw
   volgnummer_transactie TEXT,
   betalingskenmerk TEXT,
   omschrijving TEXT,
-  afschriftnummer TEXT
+  afschriftnummer TEXT,
+  md5_hash UUID
 );
 
 CREATE TABLE transacties_asn
@@ -156,6 +159,7 @@ $$
   END;
 $$ LANGUAGE 'plpgsql';
 
+CREATE TRIGGER create_md5_hash_asn BEFORE INSERT OR UPDATE ON transacties_asn_raw FOR EACH ROW EXECUTE PROCEDURE create_md5_hash_asn();
 CREATE TRIGGER create_md5_hash_asn BEFORE INSERT OR UPDATE ON transacties_asn FOR EACH ROW EXECUTE PROCEDURE create_md5_hash_asn();
 
 -- All
