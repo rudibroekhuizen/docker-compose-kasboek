@@ -57,3 +57,4 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- CALL copy_from_asn('/mnt/miniodata/kasboek/transacties_asn.csv');
+--
