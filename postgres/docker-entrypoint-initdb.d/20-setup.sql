@@ -43,8 +43,9 @@ CREATE TABLE transacties_ing
   bedrag MONEY,
   mutatiesoort TEXT,
   mededeling TEXT,
-  tsv TSVECTOR,
-  md5_hash UUID
+  md5_hash UUID,
+  tsv TSVECTOR
+
 );
   
 CREATE TRIGGER create_tsv_ing BEFORE INSERT OR UPDATE
@@ -126,8 +127,8 @@ CREATE TABLE transacties_asn
   betalingskenmerk TEXT,
   omschrijving TEXT,
   afschriftnummer TEXT,
-  tsv TSVECTOR,
-  md5_hash UUID
+  md5_hash UUID,
+  tsv TSVECTOR
 );
 
 CREATE TRIGGER create_tsv_asn BEFORE INSERT OR UPDATE
