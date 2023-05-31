@@ -45,7 +45,6 @@ CREATE TABLE transacties_ing
   mededeling TEXT,
   md5_hash UUID,
   tsv TSVECTOR
-
 );
   
 CREATE TRIGGER create_tsv_ing BEFORE INSERT OR UPDATE
@@ -127,6 +126,7 @@ CREATE TABLE transacties_asn
   omschrijving TEXT,
   afschriftnummer TEXT,
   md5_hash UUID,
+  af_bij TEXT,
   tsv TSVECTOR
 );
 
