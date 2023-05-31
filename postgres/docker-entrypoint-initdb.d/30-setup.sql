@@ -21,7 +21,7 @@ BEGIN
     ) FROM %L csv header', _source_file);
   MERGE INTO transacties_ing ti
   USING transacties_ing_raw tir  
-  ON (tI.md5_hash = tir.md5_hash)
+  ON (ti.md5_hash = tir.md5_hash)
   WHEN MATCHED THEN
   UPDATE SET
     datum = tir.datum,
