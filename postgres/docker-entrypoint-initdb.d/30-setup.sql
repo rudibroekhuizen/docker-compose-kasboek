@@ -20,8 +20,8 @@ BEGIN
     mededeling
     ) FROM %L csv header', _source_file);
   MERGE INTO transacties_ing ti
-  USING transacties_ing_raw tir
-  ON MD5(ROW(ti.boekingsdatum, ti.tegenrekeningnummer, ti.naam_tegenrekening, ti.transactiebedrag, ti.journaaldatum, ti.volgnummer_transactie, ti.omschrijving)::text) = MD5(ROW(tir.boekingsdatum, tir.tegenrekeningnummer, tir.naam_tegenrekening, tir.transactiebedrag, tir.journaaldatum, tir.volgnummer_transactie, tir.omschrijving)::text)
+  USING transacties_ing_raw tir  
+  ON (tI.md5_hash = tir.md5_hash)
   WHEN MATCHED THEN
   UPDATE SET
     datum = tir.datum,
@@ -95,7 +95,7 @@ BEGIN
     ) FROM %L csv header', _source_file);
   MERGE INTO transacties_asn ta
   USING transacties_asn_raw tar
-  ON (ta.md5_hash = tar.md5_hash)
+  ON MD5(ROW(ti.boekingsdatum, ti.tegenrekeningnummer, ti.naam_tegenrekening, ti.transactiebedrag, ti.journaaldatum, ti.volgnummer_transactie, ti.omschrijving)::text) = MD5(ROW(tir.boekingsdatum, tir.tegenrekeningnummer, tir.naam_tegenrekening, tir.transactiebedrag, tir.journaaldatum, tir.volgnummer_transactie, tir.omschrijving)::text)
   WHEN MATCHED THEN
   UPDATE SET
     boekingsdatum = tar.boekingsdatum,
