@@ -67,10 +67,10 @@ $$ LANGUAGE plpgsql;
 
 
 -- Insert ASN transactions
-CREATE OR REPLACE PROCEDURE copy_from_asn(
-   _source_file text
-) AS
-$$
+CREATE OR REPLACE PROCEDURE public.copy_from_asn(
+	IN _source_file text)
+LANGUAGE 'plpgsql'
+AS $BODY$
 BEGIN
   EXECUTE format('COPY transacties_asn_raw (
     boekingsdatum,
@@ -95,7 +95,7 @@ BEGIN
     ) FROM %L csv header', _source_file);
   MERGE INTO transacties_asn ta
   USING transacties_asn_raw tar
-  ON MD5(ROW(ti.boekingsdatum, ti.tegenrekeningnummer, ti.naam_tegenrekening, ti.transactiebedrag, ti.journaaldatum, ti.volgnummer_transactie, ti.omschrijving)::text) = MD5(ROW(tir.boekingsdatum, tir.tegenrekeningnummer, tir.naam_tegenrekening, tir.transactiebedrag, tir.journaaldatum, tir.volgnummer_transactie, tir.omschrijving)::text)
+  ON MD5(ROW(ta.boekingsdatum, ta.tegenrekeningnummer, ta.naam_tegenrekening, ta.transactiebedrag, ta.journaaldatum, ta.volgnummer_transactie, ta.omschrijving)::text) = MD5(ROW(tar.boekingsdatum, tar.tegenrekeningnummer, tar.naam_tegenrekening, tar.transactiebedrag, tar.journaaldatum, tar.volgnummer_transactie, tar.omschrijving)::text)
   WHEN MATCHED THEN
   UPDATE SET
     boekingsdatum = tar.boekingsdatum,
@@ -116,8 +116,7 @@ BEGIN
     volgnummer_transactie = tar.volgnummer_transactie,
     betalingskenmerk = tar.betalingskenmerk,
     omschrijving = tar.omschrijving,
-    afschriftnummer = tar.afschriftnummer,
-	md5_hash = tar.md5_hash
+    afschriftnummer = tar.afschriftnummer
   WHEN NOT MATCHED THEN
   INSERT (
     boekingsdatum,
@@ -138,8 +137,7 @@ BEGIN
     volgnummer_transactie,
     betalingskenmerk,
     omschrijving,
-    afschriftnummer,
-    md5_hash)
+    afschriftnummer)
   VALUES (
     tar.boekingsdatum,
     tar.opdrachtgeversrekening,
@@ -159,13 +157,14 @@ BEGIN
     tar.volgnummer_transactie,
     tar.betalingskenmerk,
     tar.omschrijving,
-    tar.afschriftnummer,
-    tar.md5_hash);
+    tar.afschriftnummer);
   COMMIT;
   TRUNCATE TABLE words_asn;
   INSERT INTO words_asn SELECT * FROM ts_stat('SELECT tsv FROM transacties_asn');
 END;
-$$ LANGUAGE plpgsql;
+$BODY$;
+ALTER PROCEDURE public.copy_from_asn(text)
+    OWNER TO postgres;
 
 -- CALL copy_from_asn('/mnt/miniodata/kasboek/transacties_asn.csv');
 --
