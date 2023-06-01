@@ -100,7 +100,6 @@ CREATE TABLE transacties_asn_raw
   betalingskenmerk TEXT,
   omschrijving TEXT,
   afschriftnummer TEXT
---  md5_hash UUID
 );
 
 CREATE TABLE transacties_asn
@@ -125,7 +124,6 @@ CREATE TABLE transacties_asn
   betalingskenmerk TEXT,
   omschrijving TEXT,
   afschriftnummer TEXT,
---  md5_hash UUID,
   af_bij TEXT,
   tsv TSVECTOR
 );
@@ -159,6 +157,17 @@ ON words_asn USING gin
 --$$ LANGUAGE 'plpgsql';
 
 --CREATE TRIGGER create_md5_hash_asn BEFORE INSERT OR UPDATE ON transacties_asn_raw FOR EACH ROW EXECUTE PROCEDURE create_md5_hash_asn();
+
+-- Populate column af_bij
+CREATE OR REPLACE function create_sign_asn() RETURNS TRIGGER AS 
+$$
+  BEGIN 
+    NEW.af_bij := SIGN(NEW.transactiebedrag::numeric);
+    RETURN NEW;
+  END;
+$$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER create_sign_asn BEFORE INSERT OR UPDATE ON transacties_asn FOR EACH ROW EXECUTE PROCEDURE create_sign_asn();
 
 
 -- All
