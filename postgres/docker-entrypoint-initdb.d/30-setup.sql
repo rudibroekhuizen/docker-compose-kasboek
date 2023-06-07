@@ -96,27 +96,27 @@ BEGIN
   MERGE INTO transacties_asn ta
   USING transacties_asn_raw tar
   ON MD5(ROW(ta.boekingsdatum, ta.tegenrekeningnummer, ta.naam_tegenrekening, ta.transactiebedrag, ta.journaaldatum, ta.volgnummer_transactie, ta.omschrijving)::text) = MD5(ROW(tar.boekingsdatum, tar.tegenrekeningnummer, tar.naam_tegenrekening, tar.transactiebedrag, tar.journaaldatum, tar.volgnummer_transactie, tar.omschrijving)::text)
-  WHEN MATCHED THEN
-  UPDATE SET
-    boekingsdatum = tar.boekingsdatum,
-    opdrachtgeversrekening = tar.opdrachtgeversrekening,
-    tegenrekeningnummer = tar.tegenrekeningnummer,
-    naam_tegenrekening = tar.naam_tegenrekening,
-    adres = tar.adres,
-    postcode = tar.postcode,
-    plaats = tar.plaats,
-    valutasoort_rekening = tar.valutasoort_rekening,
-    saldo_rekening_voor_mutatie = tar.saldo_rekening_voor_mutatie,
-    valutasoort_mutatie = tar.valutasoort_mutatie,
-    transactiebedrag = tar.transactiebedrag,
-    journaaldatum = tar.journaaldatum,
-    valutadatum = tar.valutadatum,
-    interne_transactiecode = tar.interne_transactiecode,
-    globale_transactiecode = tar.globale_transactiecode,
-    volgnummer_transactie = tar.volgnummer_transactie,
-    betalingskenmerk = tar.betalingskenmerk,
-    omschrijving = tar.omschrijving,
-    afschriftnummer = tar.afschriftnummer
+  WHEN MATCHED THEN DO NOTHING
+  #UPDATE SET
+  #  boekingsdatum = tar.boekingsdatum,
+  #  opdrachtgeversrekening = tar.opdrachtgeversrekening,
+  #  tegenrekeningnummer = tar.tegenrekeningnummer,
+  #  naam_tegenrekening = tar.naam_tegenrekening,
+  #  adres = tar.adres,
+  #  postcode = tar.postcode,
+  #  plaats = tar.plaats,
+  #  valutasoort_rekening = tar.valutasoort_rekening,
+  #  saldo_rekening_voor_mutatie = tar.saldo_rekening_voor_mutatie,
+  #  valutasoort_mutatie = tar.valutasoort_mutatie,
+  #  transactiebedrag = tar.transactiebedrag,
+  #  journaaldatum = tar.journaaldatum,
+  #  valutadatum = tar.valutadatum,
+  #  interne_transactiecode = tar.interne_transactiecode,
+  #  globale_transactiecode = tar.globale_transactiecode,
+  #  volgnummer_transactie = tar.volgnummer_transactie,
+  #  betalingskenmerk = tar.betalingskenmerk,
+  #  omschrijving = tar.omschrijving,
+  #  afschriftnummer = tar.afschriftnummer
   WHEN NOT MATCHED THEN
   INSERT (
     boekingsdatum,
