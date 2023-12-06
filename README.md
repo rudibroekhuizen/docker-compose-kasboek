@@ -16,9 +16,14 @@ Verbind met de database:
 docker-compose exec postgres bash -c 'psql -d kasboek -U $POSTGRES_USER $POSTGRES_DB'
 ```
 
-Importeer transacties:
+Importeer transacties ING:
 ```sh
 CALL copy_from_ing('/mnt/miniodata/kasboek/transacties_ing.csv');
+```
+
+Importeer transacties ASN:
+```sh
+CALL copy_from_asn('/mnt/miniodata/kasboek/transacties_asn.csv');
 ```
 
 Browse naar het dashboard http://localhost:3000/dashboards.
