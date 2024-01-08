@@ -251,7 +251,7 @@
           "metricColumn": "none",
           "queryType": "randomWalk",
           "rawQuery": true,
-          "rawSql": "WITH t1 as (\nSELECT $__time(\"boekingsdatum\"),\n  SUM(transactiebedrag::numeric) AS amount_new\nFROM transacties_asn t2\nLEFT JOIN mijn_rekeningen t3 ON t2.tegenrekeningnummer = t3.rekening\nWHERE t3.rekening IS null\nAND $__timeFilter(boekingsdatum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t2.opdrachtgeversrekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t2.af_bij IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\n--AND (t2.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nGROUP BY time\nORDER by time ASC\n), t4 AS (\n  SELECT time,\n    SUM(amount_new) over (ORDER BY time ASC rows between unbounded preceding AND current row) AS verloop\n  FROM t1)\nSELECT * FROM t4\nORDER BY time ASC;",
+          "rawSql": "WITH t1 AS (\nSELECT $__time(\"boekingsdatum\"),\n  SUM(transactiebedrag::numeric)/100 AS amount_new\nFROM transacties_asn t2\nLEFT JOIN mijn_rekeningen t3 ON t2.tegenrekeningnummer = t3.rekening\nWHERE t3.rekening IS null\nAND $__timeFilter(boekingsdatum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t2.opdrachtgeversrekening::text IN ($Rekening) OR array_position(ARRAY[$Rekening], NULL, 1) = 1)\nAND (t2.af_bij IN ($Afbij) OR array_position(ARRAY[$Afbij], NULL, 1) = 1)\n--AND (t2.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nGROUP BY time\nORDER by time ASC\n)\nSELECT time,\nSUM(amount_new) over (ORDER BY time ASC rows between unbounded preceding AND current row) AS verloop\nFROM t1\nORDER BY time ASC;",
           "refId": "A",
           "select": [
             [
@@ -399,7 +399,7 @@
           "metricColumn": "none",
           "queryType": "randomWalk",
           "rawQuery": true,
-          "rawSql": "SELECT\n  ABS(SUM(transactiebedrag::numeric)/100)::money AS total\nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(boekingsdatum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.opdrachtgeversrekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\n--AND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\n--AND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t1.af_bij IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\n--AND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nAND SIGN(transactiebedrag::numeric) = -1;",
+          "rawSql": "SELECT\n  ABS(SUM(transactiebedrag::numeric)/100)::money AS total\nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(boekingsdatum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.opdrachtgeversrekening::text IN ($Rekening) OR array_position(ARRAY[$Rekening], NULL, 1) = 1)\nAND (t1.af_bij IN ($Afbij) OR array_position(ARRAY[$Afbij], NULL, 1) = 1)--AND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\n--AND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nAND SIGN(transactiebedrag::numeric) = -1;",
           "refId": "A",
           "select": [
             [
@@ -555,7 +555,7 @@
           "metricColumn": "none",
           "queryType": "randomWalk",
           "rawQuery": true,
-          "rawSql": "SELECT\n  SUM(transactiebedrag)/100 AS total\nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(boekingsdatum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.opdrachtgeversrekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\n--AND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\n--AND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t1.af_bij IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\n--AND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\n--AND af_bij = 'Af';\nAND SIGN(transactiebedrag::numeric) = 1;",
+          "rawSql": "SELECT\n  SUM(transactiebedrag)/100 AS total\nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(boekingsdatum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.opdrachtgeversrekening::text IN ($Rekening) OR array_position(ARRAY[$Rekening], NULL, 1) = 1)\n--AND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t1.af_bij IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\n--AND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\n--AND af_bij = 'Af';\nAND SIGN(transactiebedrag::numeric) = 1;",
           "refId": "A",
           "select": [
             [
@@ -740,7 +740,7 @@
           "metricColumn": "none",
           "queryType": "randomWalk",
           "rawQuery": true,
-          "rawSql": "SELECT\n  ABS(SUM(transactiebedrag::numeric)/100)::money AS total,\n  CASE\n   WHEN naam_tegenrekening IS NULL THEN omschrijving\n   ELSE naam_tegenrekening\n   END naam_tegenrekening\nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(boekingsdatum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.opdrachtgeversrekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\n--AND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\n--AND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t1.af_bij IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\n--AND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nAND SIGN(transactiebedrag::numeric) = -1\nGROUP BY 2\nORDER BY total DESC;",
+          "rawSql": "SELECT\n  ABS(SUM(transactiebedrag::numeric)/100)::money AS total,\n  CASE\n   WHEN naam_tegenrekening IS NULL THEN omschrijving\n   ELSE naam_tegenrekening\n   END naam_tegenrekening\nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(boekingsdatum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.opdrachtgeversrekening::text IN ($Rekening) OR array_position(ARRAY[$Rekening], NULL, 1) = 1)\nAND (t1.af_bij IN ($Afbij) OR array_position(ARRAY[$Afbij], NULL, 1) = 1)--AND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\n--AND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\n--AND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nAND SIGN(transactiebedrag::numeric) = -1\nGROUP BY 2\nORDER BY total DESC;",
           "refId": "A",
           "select": [
             [
@@ -925,7 +925,7 @@
           "metricColumn": "none",
           "queryType": "randomWalk",
           "rawQuery": true,
-          "rawSql": "SELECT\n  ABS(SUM(transactiebedrag::numeric)/100)::money AS total,\nCASE\n  WHEN naam_tegenrekening IS NULL THEN omschrijving\nELSE naam_tegenrekening\n  END naam_tegenrekening\nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(boekingsdatum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.opdrachtgeversrekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\n--AND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\n--AND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t1.af_bij IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\n--AND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nAND SIGN(transactiebedrag::numeric) = 1\nGROUP BY 2\nORDER BY total DESC;",
+          "rawSql": "SELECT\n  ABS(SUM(transactiebedrag::numeric)/100)::money AS total,\nCASE\n  WHEN naam_tegenrekening IS NULL THEN omschrijving\nELSE naam_tegenrekening\n  END naam_tegenrekening\nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(boekingsdatum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.opdrachtgeversrekening::text IN ($Rekening) OR array_position(ARRAY[$Rekening], NULL, 1) = 1)\nAND (t1.af_bij IN ($Afbij) OR array_position(ARRAY[$Afbij], NULL, 1) = 1)--AND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\n--AND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\n--AND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nAND SIGN(transactiebedrag::numeric) = 1\nGROUP BY 2\nORDER BY total DESC;",
           "refId": "A",
           "select": [
             [
@@ -1048,7 +1048,7 @@
           "metricColumn": "none",
           "queryType": "randomWalk",
           "rawQuery": true,
-          "rawSql": "SELECT $__time(\"boekingsdatum\"),\n  SUM(transactiebedrag::numeric)/100 AS amount_new \nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(\"boekingsdatum\")\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.opdrachtgeversrekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t1.af_bij IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\n--AND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nGROUP BY boekingsdatum\nORDER BY boekingsdatum ASC;",
+          "rawSql": "SELECT $__time(\"boekingsdatum\"),\n  SUM(transactiebedrag::numeric)/100 AS amount_new \nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(\"boekingsdatum\")\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.opdrachtgeversrekening::text IN ($Rekening) OR array_position(ARRAY[$Rekening], NULL, 1) = 1)\nAND (t1.af_bij IN ($Afbij) OR array_position(ARRAY[$Afbij], NULL, 1) = 1)\n--AND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nGROUP BY boekingsdatum\nORDER BY boekingsdatum ASC;",
           "refId": "A",
           "select": [
             [
@@ -1163,7 +1163,7 @@
           "metricColumn": "none",
           "queryType": "randomWalk",
           "rawQuery": true,
-          "rawSql": "SELECT\n  count(*), $__time(\"boekingsdatum\")\nFROM transacties_asn\nWHERE $__timeFilter(\"boekingsdatum\")\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (opdrachtgeversrekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (af_bij IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\n--AND (mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nGROUP BY time\nORDER BY time ASC",
+          "rawSql": "SELECT\n  count(*), $__time(\"boekingsdatum\")\nFROM transacties_asn\nWHERE $__timeFilter(\"boekingsdatum\")\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (opdrachtgeversrekening::text IN ($Rekening) OR array_position(ARRAY[$Rekening], NULL, 1) = 1)\nAND (af_bij IN ($Afbij) OR array_position(ARRAY[$Afbij], NULL, 1) = 1)\n--AND (mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nGROUP BY time\nORDER BY time ASC",
           "refId": "A",
           "select": [
             [
@@ -1288,7 +1288,7 @@
           "metricColumn": "none",
           "queryType": "randomWalk",
           "rawQuery": true,
-          "rawSql": "SELECT t1.boekingsdatum, t1.transactiebedrag/100 AS transactiebedrag, t1.naam_tegenrekening, t1.opdrachtgeversrekening, t1.tegenrekeningnummer, t1.omschrijving\nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(\"boekingsdatum\")\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.opdrachtgeversrekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t1.af_bij IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\n--AND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nORDER BY 1 DESC, 2\nLIMIT 1000;",
+          "rawSql": "SELECT t1.boekingsdatum, t1.transactiebedrag/100 AS transactiebedrag, t1.naam_tegenrekening, t1.opdrachtgeversrekening, t1.tegenrekeningnummer, t1.omschrijving\nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(\"boekingsdatum\")\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.opdrachtgeversrekening::text IN ($Rekening) OR array_position(ARRAY[$Rekening], NULL, 1) = 1)\nAND (t1.af_bij IN ($Afbij) OR array_position(ARRAY[$Afbij], NULL, 1) = 1)\n--AND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nORDER BY 1 DESC, 2\nLIMIT 1000;",
           "refId": "A",
           "select": [
             [
@@ -1408,7 +1408,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  count(*), naam_tegenrekening\nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(boekingsdatum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.opdrachtgeversrekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t1.af_bij IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\nGROUP BY naam_tegenrekening\nORDER by count DESC\nLIMIT 15",
+          "rawSql": "SELECT\n  count(*), naam_tegenrekening\nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(boekingsdatum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.opdrachtgeversrekening::text IN ($Rekening) OR array_position(ARRAY[$Rekening], NULL, 1) = 1)\nAND (t1.af_bij IN ($Afbij) OR array_position(ARRAY[$Afbij], NULL, 1) = 1)\nGROUP BY naam_tegenrekening\nORDER by count DESC\nLIMIT 15",
           "refId": "A",
           "select": [
             [
@@ -1482,7 +1482,7 @@
     "list": [
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": "",
           "value": ""
         },
@@ -1562,7 +1562,7 @@
       },
       {
         "current": {
-          "selected": true,
+          "selected": false,
           "text": [
             "All"
           ],
@@ -1593,8 +1593,8 @@
     ]
   },
   "time": {
-    "from": "now-5y",
-    "to": "now"
+    "from": "2023-02-04T02:42:50.178Z",
+    "to": "2024-01-07T17:07:36.818Z"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -1624,6 +1624,6 @@
   "timezone": "",
   "title": "Kasboek ASN",
   "uid": "430HrqZ4a",
-  "version": 2,
+  "version": 1,
   "weekStart": ""
 }
