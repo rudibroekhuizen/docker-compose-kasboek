@@ -22,7 +22,7 @@ services:
       - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
       - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
     ports:
-      - "5050:80"
+      - "80:80"
 
   minio:
     image: minio/minio:RELEASE.2020-12-03T05-49-24Z
@@ -38,14 +38,14 @@ services:
       - miniodata:/data
 
   grafana:
-    image: grafana/grafana:7.3.4
+    image: grafana/grafana:9.1.7-ubuntu
     restart: unless-stopped
     volumes:
-      - ./grafana/dashboards:/var/lib/grafana/dashboards
       - ./grafana/provisioning:/etc/grafana/provisioning
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
       - GF_INSTALL_PLUGINS=${GF_INSTALL_PLUGINS}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     ports:
       - "3000:3000"
 

@@ -1,0 +1,1629 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "datasource",
+          "uid": "grafana"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "PCC52D03280B7034C"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "decimals": 2,
+          "displayName": "",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Time"
+              },
+              {
+                "id": "unit",
+                "value": "time: YYYY-MM-DD"
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 15,
+        "w": 3,
+        "x": 0,
+        "y": 0
+      },
+      "id": 14,
+      "links": [],
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "9.1.7",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "PCC52D03280B7034C"
+          },
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "rawSql": "SELECT word, similarity(word, '$search') AS similarity FROM words_asn WHERE word % '$Search'\nORDER BY similarity asc\nLIMIT 100;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Zoek suggesties",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {
+            "reducers": []
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "PCC52D03280B7034C"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 11,
+        "x": 3,
+        "y": 0
+      },
+      "id": 7,
+      "links": [],
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.1.7",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "PCC52D03280B7034C"
+          },
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "rawSql": "WITH t1 AS (\nSELECT $__time(\"boekingsdatum\"),\n  SUM(transactiebedrag::numeric)/100 AS amount_new\nFROM transacties_asn t2\nLEFT JOIN mijn_rekeningen t3 ON t2.tegenrekeningnummer = t3.rekening\nWHERE t3.rekening IS null\nAND $__timeFilter(boekingsdatum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t2.opdrachtgeversrekening::text IN ($Rekening) OR array_position(ARRAY[$Rekening], NULL, 1) = 1)\nAND (t2.af_bij IN ($Afbij) OR array_position(ARRAY[$Afbij], NULL, 1) = 1)\n--AND (t2.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nGROUP BY time\nORDER by time ASC\n)\nSELECT time,\nSUM(amount_new) over (ORDER BY time ASC rows between unbounded preceding AND current row) AS verloop\nFROM t1\nORDER BY time ASC;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Saldo",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "PCC52D03280B7034C"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "decimals": 2,
+          "displayName": "",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Time"
+              },
+              {
+                "id": "unit",
+                "value": "time: YYYY-MM-DD HH:mm:ss"
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyEUR"
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "total"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "bedrag"
+              },
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 5,
+        "x": 14,
+        "y": 0
+      },
+      "id": 9,
+      "links": [],
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "9.1.7",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "PCC52D03280B7034C"
+          },
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  ABS(SUM(transactiebedrag::numeric)/100)::money AS total\nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(boekingsdatum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.opdrachtgeversrekening::text IN ($Rekening) OR array_position(ARRAY[$Rekening], NULL, 1) = 1)\nAND (t1.af_bij IN ($Afbij) OR array_position(ARRAY[$Afbij], NULL, 1) = 1)--AND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\n--AND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nAND SIGN(transactiebedrag::numeric) = -1;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Totaal af",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {
+            "reducers": []
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "PCC52D03280B7034C"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "decimals": 2,
+          "displayName": "",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Time"
+              },
+              {
+                "id": "unit",
+                "value": "time: YYYY-MM-DD HH:mm:ss"
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "currencyEUR"
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "total"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "bedrag"
+              },
+              {
+                "id": "unit",
+                "value": "none"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 5,
+        "x": 19,
+        "y": 0
+      },
+      "id": 10,
+      "links": [],
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "9.1.7",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "PCC52D03280B7034C"
+          },
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  SUM(transactiebedrag)/100 AS total\nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(boekingsdatum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.opdrachtgeversrekening::text IN ($Rekening) OR array_position(ARRAY[$Rekening], NULL, 1) = 1)\n--AND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t1.af_bij IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\n--AND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\n--AND af_bij = 'Af';\nAND SIGN(transactiebedrag::numeric) = 1;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "PCC52D03280B7034C"
+          },
+          "format": "table",
+          "group": [],
+          "hide": true,
+          "metricColumn": "none",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  SUM(bedrag) AS total\nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(boekingsdatum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t1.af_bij::text IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\nAND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nAND af_bij = 'Bij';",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Totaal bij",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {
+            "reducers": []
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "PCC52D03280B7034C"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Time"
+              },
+              {
+                "id": "unit",
+                "value": "time: YYYY-MM-DD HH:mm:ss"
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "total"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "bedrag"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 5,
+        "x": 14,
+        "y": 3
+      },
+      "id": 11,
+      "links": [],
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "9.1.7",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "PCC52D03280B7034C"
+          },
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  ABS(SUM(transactiebedrag::numeric)/100)::money AS total,\n  CASE\n   WHEN naam_tegenrekening IS NULL THEN omschrijving\n   ELSE naam_tegenrekening\n   END naam_tegenrekening\nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(boekingsdatum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.opdrachtgeversrekening::text IN ($Rekening) OR array_position(ARRAY[$Rekening], NULL, 1) = 1)\nAND (t1.af_bij IN ($Afbij) OR array_position(ARRAY[$Afbij], NULL, 1) = 1)--AND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\n--AND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\n--AND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nAND SIGN(transactiebedrag::numeric) = -1\nGROUP BY 2\nORDER BY total DESC;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        },
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "PCC52D03280B7034C"
+          },
+          "format": "table",
+          "group": [],
+          "hide": true,
+          "metricColumn": "none",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  SUM(bedrag) AS total, naam_tegenrekening\nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(boekingsdatum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (af_bij::text IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\nAND (mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nAND af_bij = 'Af'\nGROUP BY naam_tegenrekening\nORDER BY total DESC\nLIMIT 15\n",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Overzicht af",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {
+            "reducers": []
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "PCC52D03280B7034C"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Time"
+              },
+              {
+                "id": "unit",
+                "value": "time: YYYY-MM-DD HH:mm:ss"
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "total"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "bedrag"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 5,
+        "x": 19,
+        "y": 3
+      },
+      "id": 8,
+      "links": [],
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "9.1.7",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "PCC52D03280B7034C"
+          },
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  ABS(SUM(transactiebedrag::numeric)/100)::money AS total,\nCASE\n  WHEN naam_tegenrekening IS NULL THEN omschrijving\nELSE naam_tegenrekening\n  END naam_tegenrekening\nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(boekingsdatum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.opdrachtgeversrekening::text IN ($Rekening) OR array_position(ARRAY[$Rekening], NULL, 1) = 1)\nAND (t1.af_bij IN ($Afbij) OR array_position(ARRAY[$Afbij], NULL, 1) = 1)--AND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\n--AND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\n--AND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nAND SIGN(transactiebedrag::numeric) = 1\nGROUP BY 2\nORDER BY total DESC;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Overzicht bij",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {
+            "reducers": []
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "PCC52D03280B7034C"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 11,
+        "x": 3,
+        "y": 5
+      },
+      "id": 5,
+      "links": [],
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.1.7",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "PCC52D03280B7034C"
+          },
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "rawSql": "SELECT $__time(\"boekingsdatum\"),\n  SUM(transactiebedrag::numeric)/100 AS amount_new \nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(\"boekingsdatum\")\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.opdrachtgeversrekening::text IN ($Rekening) OR array_position(ARRAY[$Rekening], NULL, 1) = 1)\nAND (t1.af_bij IN ($Afbij) OR array_position(ARRAY[$Afbij], NULL, 1) = 1)\n--AND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nGROUP BY boekingsdatum\nORDER BY boekingsdatum ASC;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Bedrag",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "PCC52D03280B7034C"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "bars",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 11,
+        "x": 3,
+        "y": 10
+      },
+      "id": 4,
+      "links": [],
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "9.1.7",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "PCC52D03280B7034C"
+          },
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  count(*), $__time(\"boekingsdatum\")\nFROM transacties_asn\nWHERE $__timeFilter(\"boekingsdatum\")\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (opdrachtgeversrekening::text IN ($Rekening) OR array_position(ARRAY[$Rekening], NULL, 1) = 1)\nAND (af_bij IN ($Afbij) OR array_position(ARRAY[$Afbij], NULL, 1) = 1)\n--AND (mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nGROUP BY time\nORDER BY time ASC",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Aantal",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "PCC52D03280B7034C"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "decimals": 2,
+          "displayName": "",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Time"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Time"
+              },
+              {
+                "id": "unit",
+                "value": "time: YYYY-MM-DD"
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "custom.align"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 20,
+        "x": 0,
+        "y": 15
+      },
+      "id": 6,
+      "links": [],
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true
+      },
+      "pluginVersion": "9.1.7",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "PCC52D03280B7034C"
+          },
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "queryType": "randomWalk",
+          "rawQuery": true,
+          "rawSql": "SELECT t1.boekingsdatum, t1.transactiebedrag/100 AS transactiebedrag, t1.naam_tegenrekening, t1.opdrachtgeversrekening, t1.tegenrekeningnummer, t1.omschrijving\nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(\"boekingsdatum\")\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.opdrachtgeversrekening::text IN ($Rekening) OR array_position(ARRAY[$Rekening], NULL, 1) = 1)\nAND (t1.af_bij IN ($Afbij) OR array_position(ARRAY[$Afbij], NULL, 1) = 1)\n--AND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nORDER BY 1 DESC, 2\nLIMIT 1000;",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Transacties",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {
+            "reducers": []
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "PCC52D03280B7034C"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "decimals": 2,
+          "displayName": "",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "count"
+            },
+            "properties": [
+              {
+                "id": "custom.align",
+                "value": "left"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "custom.width",
+                "value": 89
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 4,
+        "x": 20,
+        "y": 15
+      },
+      "id": 2,
+      "links": [],
+      "options": {
+        "footer": {
+          "fields": "",
+          "reducer": [
+            "sum"
+          ],
+          "show": false
+        },
+        "showHeader": true,
+        "sortBy": []
+      },
+      "pluginVersion": "9.1.7",
+      "targets": [
+        {
+          "alias": "",
+          "datasource": {
+            "type": "postgres",
+            "uid": "PCC52D03280B7034C"
+          },
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  count(*), naam_tegenrekening\nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(boekingsdatum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.opdrachtgeversrekening::text IN ($Rekening) OR array_position(ARRAY[$Rekening], NULL, 1) = 1)\nAND (t1.af_bij IN ($Afbij) OR array_position(ARRAY[$Afbij], NULL, 1) = 1)\nGROUP BY naam_tegenrekening\nORDER by count DESC\nLIMIT 15",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        },
+        {
+          "alias": "",
+          "datasource": {
+            "type": "postgres",
+            "uid": "PCC52D03280B7034C"
+          },
+          "format": "table",
+          "group": [],
+          "hide": true,
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  count(*), naam_tegenrekening\nFROM transacties_asn t1\nLEFT JOIN mijn_rekeningen t2 ON t1.tegenrekeningnummer = t2.rekening\nWHERE t2.rekening IS null\nAND $__timeFilter(boekingsdatum)\nAND (tsv @@ websearch_to_tsquery('simple', '$Search') OR NULLIF('$Search', '') IS null)\nAND (t1.rekening::text IN ($Rekening) OR NULLIF(TRIM(CONCAT($Rekening)), '') IS null)\nAND (t1.af_bij::text IN ($Afbij) OR NULLIF(TRIM(CONCAT($Afbij)), '') IS null)\nAND (t1.mutatiesoort::text IN ($Mutatiesoort) OR NULLIF(TRIM(CONCAT($Mutatiesoort)), '') IS null)\nGROUP BY naam_tegenrekening\nORDER by count DESC\nLIMIT 15",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": [
+                  "value"
+                ],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "title": "Overzicht naam_tegenrekening",
+      "transformations": [
+        {
+          "id": "merge",
+          "options": {
+            "reducers": []
+          }
+        }
+      ],
+      "type": "table"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 37,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": true,
+          "text": "",
+          "value": ""
+        },
+        "hide": 0,
+        "label": "",
+        "name": "Search",
+        "options": [
+          {
+            "selected": true,
+            "text": "",
+            "value": ""
+          }
+        ],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "PCC52D03280B7034C"
+        },
+        "definition": "SELECT DISTINCT opdrachtgeversrekening AS __value, opdrachtgeversrekening AS __text FROM transacties_asn WHERE opdrachtgeversrekening is not null;",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "Rekening",
+        "options": [],
+        "query": "SELECT DISTINCT opdrachtgeversrekening AS __value, opdrachtgeversrekening AS __text FROM transacties_asn WHERE opdrachtgeversrekening is not null;",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "PCC52D03280B7034C"
+        },
+        "definition": "SELECT DISTINCT af_bij AS __value, af_bij AS __text FROM transacties_asn WHERE af_bij is not null;",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "Afbij",
+        "options": [],
+        "query": "SELECT DISTINCT af_bij AS __value, af_bij AS __text FROM transacties_asn WHERE af_bij is not null;",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "datasource": {
+          "type": "postgres",
+          "uid": "PCC52D03280B7034C"
+        },
+        "definition": "SELECT DISTINCT mutatiesoort AS __value, mutatiesoort AS __text FROM transacties_asn WHERE rekening is not null;",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "Mutatiesoort",
+        "options": [],
+        "query": "SELECT DISTINCT mutatiesoort AS __value, mutatiesoort AS __text FROM transacties_asn WHERE rekening is not null;",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "2023-02-04T02:42:50.178Z",
+    "to": "2024-01-07T17:07:36.818Z"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "timezone": "",
+  "title": "Kasboek ASN",
+  "uid": "430HrqZ4a",
+  "version": 1,
+  "weekStart": ""
+}
