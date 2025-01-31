@@ -20,20 +20,9 @@ BEGIN
     mededeling
     ) FROM %L csv header', _source_file);
   MERGE INTO transacties_ing ti
-  USING transacties_ing_raw tir  
-  ON (ti.md5_hash = tir.md5_hash)
-  WHEN MATCHED THEN
-  UPDATE SET
-    datum = tir.datum,
-    naam = tir.naam,
-    rekening = tir.rekening,
-    tegenrekening = tir.tegenrekening,
-    code = tir.code,
-    af_bij = tir.af_bij,
-    bedrag = tir.bedrag,
-    mutatiesoort = tir.mutatiesoort,
-    mededeling = tir.mededeling,
-    md5_hash = tir.md5_hash
+  USING transacties_ing_raw tir
+  ON MD5(ROW(ti.datum, ti.naam, ti.rekening, ti.tegenrekening, ti.code, ti.af_bij, ti.bedrag, ti.mutatiesoort, ti.mededeling)::text) = MD5(ROW(tir.datum, tir.naam, tir.rekening, tir.tegenrekening, tir.code, tir.af_bij, tir.bedrag, tir.mutatiesoort, tir.mededeling)::text)
+  WHEN MATCHED THEN DO NOTHING
   WHEN NOT MATCHED THEN
   INSERT (
     datum,
@@ -44,8 +33,8 @@ BEGIN
     af_bij,
     bedrag,
     mutatiesoort,
-    mededeling,
-    md5_hash)
+    mededeling
+    )
   VALUES (
     tir.datum,
     tir.naam,
@@ -55,8 +44,8 @@ BEGIN
     tir.af_bij,
     tir.bedrag,
     tir.mutatiesoort,
-    tir.mededeling,
-    tir.md5_hash);
+    tir.mededeling
+    );
   TRUNCATE TABLE words_ing;
   INSERT INTO words_ing SELECT * FROM ts_stat('SELECT tsv FROM transacties_ing');
   COMMIT; 
@@ -91,7 +80,8 @@ BEGIN
     volgnummer_transactie,
     betalingskenmerk,
     omschrijving,
-    afschriftnummer
+    afschriftnummer,
+    categorie
     ) FROM %L csv header', _source_file);
   MERGE INTO transacties_asn ta
   USING transacties_asn_raw tar
@@ -117,7 +107,9 @@ BEGIN
     volgnummer_transactie,
     betalingskenmerk,
     omschrijving,
-    afschriftnummer)
+    afschriftnummer,
+    categorie
+    )
   VALUES (
     tar.boekingsdatum,
     tar.opdrachtgeversrekening,
@@ -137,7 +129,9 @@ BEGIN
     tar.volgnummer_transactie,
     tar.betalingskenmerk,
     tar.omschrijving,
-    tar.afschriftnummer);
+    tar.afschriftnummer,
+    tar.categorie
+    );
   COMMIT;
   TRUNCATE TABLE words_asn;
   INSERT INTO words_asn SELECT * FROM ts_stat('SELECT tsv FROM transacties_asn');

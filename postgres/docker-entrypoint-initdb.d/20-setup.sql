@@ -99,7 +99,8 @@ CREATE TABLE transacties_asn_raw
   volgnummer_transactie TEXT,
   betalingskenmerk TEXT,
   omschrijving TEXT,
-  afschriftnummer TEXT
+  afschriftnummer TEXT,
+  categorie TEXT
 );
 
 CREATE TABLE transacties_asn
@@ -124,6 +125,7 @@ CREATE TABLE transacties_asn
   betalingskenmerk TEXT,
   omschrijving TEXT,
   afschriftnummer TEXT,
+  categorie TEXT,
   af_bij TEXT,
   tsv TSVECTOR
 );
